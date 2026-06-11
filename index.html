@@ -1,0 +1,4537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>networked-resilience.eu — Networked Democratic Resilience Ontology</title>
+<meta name="description" content="A plain-language, source-linked ontology and taxonomy of networked democratic resilience, authored by Silvia Fierăscu, PhD and Inna Melnykovska, PhD." />
+<meta name="author" content="Silvia Fierăscu, PhD; Inna Melnykovska, PhD" />
+<style>
+  :root{
+    --bg:#f7f1e8; --bg2:#fffaf3; --panel:#ffffff; --panel2:#efe4d2;
+    --line:#d7c7b0; --text:#1f2a2e; --muted:#66736c; --muted2:#746858;
+    --chip:#fff6e8;
+    --accent:#9b4d32; --accent2:#2f6f73; --warn:#8f5b05;
+    --good:#2f7d52; --bad:#b9443f; --violet:#80588f; --ink:#15272d;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:
+      radial-gradient(circle at 12% -10%, rgba(47,111,115,.18), transparent 30%),
+      radial-gradient(circle at 92% 8%, rgba(155,77,50,.16), transparent 26%),
+      linear-gradient(135deg,#f7f1e8 0%,#fffaf3 52%,#efe4d2 100%);
+    color:var(--text);
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header.topbar{
+    position:sticky;top:0;z-index:10;
+    padding:12px 28px 10px;border-bottom:1px solid rgba(148,163,184,.15);
+    background:rgba(255,250,243,.92);backdrop-filter:blur(10px);
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .logo{
+    width:34px;height:34px;border-radius:10px;flex-shrink:0;
+    background:conic-gradient(from 210deg,var(--accent),var(--accent2),var(--accent));
+    box-shadow:0 0 0 1px rgba(56,189,248,.4),0 6px 24px rgba(56,189,248,.25);
+    position:relative;
+  }
+  .logo::after{
+    content:"";position:absolute;inset:6px;border-radius:6px;
+    background:rgba(255,250,243,.94);
+  }
+  .logo::before{
+    content:"";position:absolute;inset:10px;border-radius:50%;z-index:1;
+    background:radial-gradient(circle,var(--text) 0 2px,transparent 3px),
+               radial-gradient(circle at 80% 30%,var(--text) 0 1.5px,transparent 2px),
+               radial-gradient(circle at 20% 80%,var(--text) 0 1.5px,transparent 2px);
+  }
+  .brand h1{margin:0;font-size:17px;letter-spacing:.01em;line-height:1.1}
+  .brand .dom{color:var(--accent);font-weight:700}
+  .brand .sub{color:var(--muted);font-size:11.5px;margin-top:2px;letter-spacing:.02em}
+
+  .topbar .search{flex:1;min-width:260px;max-width:520px;position:relative}
+  .topbar .search input{
+    width:100%;background:var(--chip);color:var(--text);
+    border:1px solid var(--line);border-radius:10px;
+    padding:9px 12px 9px 34px;font-size:13.5px;
+  }
+  .topbar .search::before{
+    content:"⌕";position:absolute;left:11px;top:50%;transform:translateY(-50%);
+    color:var(--muted2);font-size:15px;
+  }
+  .topbar .search-hits{
+    position:absolute;top:42px;left:0;right:0;max-height:340px;overflow:auto;
+    background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+    box-shadow:0 12px 32px rgba(0,0,0,.4);display:none;z-index:20;
+  }
+  .topbar .search-hits.show{display:block}
+  .topbar .search-hits .hit{
+    padding:8px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid rgba(148,163,184,.08);
+  }
+  .topbar .search-hits .hit:last-child{border-bottom:0}
+  .topbar .search-hits .hit:hover{background:rgba(56,189,248,.1)}
+  .topbar .search-hits .hit .b{color:var(--muted);font-size:11px;margin-left:6px}
+
+  .topbar .stats{display:flex;gap:6px;flex-wrap:wrap}
+  .topbar .stat{
+    background:rgba(255,255,255,.75);border:1px solid rgba(148,163,184,.15);
+    border-radius:8px;padding:5px 9px;font-size:11.5px;color:var(--muted);
+  }
+  .topbar .stat b{color:var(--text);font-weight:700;margin-right:3px}
+
+  nav.tabbar{
+    display:flex;gap:2px;padding:0 24px;border-bottom:1px solid rgba(148,163,184,.14);
+    background:rgba(255,250,243,.72);position:sticky;top:var(--topbar-h,64px);z-index:9;
+    overflow-x:auto;
+  }
+  .tab{
+    cursor:pointer;padding:11px 16px;font-size:13.5px;color:var(--muted);
+    border-bottom:2px solid transparent;user-select:none;white-space:nowrap;
+    border-left:0;border-right:0;border-top:0;background:transparent;font:inherit;
+  }
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text);border-bottom-color:var(--accent)}
+
+  main{max-width:1480px;margin:0 auto;padding:0}
+  .view{display:none}
+  .view.active{display:block}
+
+  /* ---- Home / Hero ---- */
+  .hero{
+    padding:30px 28px 14px;
+  }
+  .hero .kicker{
+    color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;margin-bottom:10px;
+  }
+  .hero h2{
+    margin:0 0 14px;font-size:30px;line-height:1.2;max-width:920px;font-weight:700;
+  }
+  .hero h2 .hl{
+    background:linear-gradient(120deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.lead{
+    color:var(--text);font-size:16px;line-height:1.55;max-width:820px;margin:0 0 14px;
+  }
+  .hero p.sub{
+    color:var(--muted);font-size:14px;line-height:1.55;max-width:820px;margin:0 0 18px;
+  }
+  .hero .ctas{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid rgba(155,77,50,.12);}
+  .hero::after{
+    content:"";position:absolute;right:28px;top:28px;width:310px;height:220px;opacity:.45;pointer-events:none;
+    background:
+      radial-gradient(circle at 20% 30%, var(--accent2) 0 5px, transparent 6px),
+      radial-gradient(circle at 58% 20%, var(--accent) 0 4px, transparent 5px),
+      radial-gradient(circle at 78% 64%, var(--violet) 0 5px, transparent 6px),
+      radial-gradient(circle at 34% 78%, var(--warn) 0 4px, transparent 5px),
+      linear-gradient(30deg, transparent 0 46%, rgba(47,111,115,.42) 47% 48%, transparent 49%),
+      linear-gradient(140deg, transparent 0 48%, rgba(155,77,50,.38) 49% 50%, transparent 51%);
+    border:1px solid rgba(155,77,50,.16);border-radius:28px;transform:rotate(-3deg);
+  }
+  .authors{color:var(--muted);font-size:13px;margin:4px 0 14px;letter-spacing:.02em;}
+  .authors b{color:var(--text)}
+  .btn{
+    cursor:pointer;border:1px solid rgba(148,163,184,.25);
+    background:rgba(255,255,255,.70);color:var(--text);
+    padding:10px 16px;border-radius:10px;font-size:13.5px;font-weight:600;
+    transition:border-color .15s,transform .1s;
+  }
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);color:var(--bg2);border-color:var(--accent)}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{background:transparent}
+
+  /* ---- Input → Throughput → Output framework ---- */
+  .framework{padding:6px 28px 4px}
+  .framework .kicker{
+    color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;margin-bottom:6px;
+  }
+  .fw-title{margin:0 0 8px;font-size:22px;font-weight:700;line-height:1.2}
+  .fw-title .fw-sub{color:var(--muted);font-weight:600;font-size:16px}
+  .fw-lead{color:var(--text);font-size:14.5px;line-height:1.6;max-width:900px;margin:0}
+  .fw-cite{display:block;color:var(--muted2);font-size:12.5px;margin-top:6px;font-style:italic}
+
+  .phase-flow{
+    display:grid;grid-template-columns:1fr auto 1fr auto 1fr;
+    gap:10px;align-items:stretch;padding:14px 28px 6px;
+  }
+  .phase-col,.phase-strip{
+    background:rgba(255,250,243,.70);border:1px solid var(--line);
+    border-top:3px solid var(--pc);border-radius:14px;padding:14px 14px 16px;
+  }
+  .phase-strip{margin:8px 28px 0}
+  .phase-arrow{align-self:center;font-size:26px;color:var(--muted2);font-weight:700}
+  .phase-head .phase-name{font-weight:800;font-size:15px;color:var(--pc)}
+  .phase-blurb{color:var(--muted);font-size:12.5px;line-height:1.5;margin:6px 0 12px}
+  .phase-pillars{display:flex;flex-direction:column;gap:10px}
+  #pillarGroups{padding-bottom:28px}
+  @media (max-width:880px){
+    .phase-flow{grid-template-columns:1fr;padding-bottom:0}
+    .phase-arrow{transform:rotate(90deg);justify-self:center}
+  }
+
+  .pillars{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:12px;padding:8px 28px 32px;
+  }
+  .pillar{
+    background:rgba(255,255,255,.72);border:1px solid rgba(148,163,184,.15);
+    border-radius:14px;padding:16px 16px 14px;cursor:pointer;
+    transition:transform .15s,border-color .15s;display:flex;flex-direction:column;gap:6px;
+    color:inherit;font:inherit;text-align:left;width:100%;
+  }
+  .pillar:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .pillar .dot{width:10px;height:10px;border-radius:50%}
+  .pillar .num{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+  .pillar h4{margin:0;font-size:15px;line-height:1.25}
+  .pillar p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.5}
+  .pillar .row{display:flex;align-items:center;gap:8px}
+
+  /* ---- Explorer ---- */
+  .explorer{
+    display:grid;grid-template-columns:38% 62%;
+    min-height:calc(100vh - 200px);border-top:1px solid rgba(148,163,184,.12);
+  }
+  .tree-pane{
+    overflow:auto;padding:14px 18px 60px;
+    border-right:1px solid rgba(148,163,184,.12);
+    background:rgba(255,250,243,.55);
+    max-height:calc(100vh - 110px);
+  }
+  .detail-pane{
+    overflow:auto;padding:18px 26px 60px;
+    max-height:calc(100vh - 110px);
+  }
+  .branch-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .branch-pill{
+    cursor:pointer;font-size:11.5px;padding:5px 10px;border-radius:999px;
+    border:1px solid rgba(148,163,184,.2);background:rgba(255,255,255,.70);
+    color:var(--text);user-select:none;display:flex;align-items:center;gap:6px;
+    font:inherit;
+  }
+  .branch-pill .d{width:8px;height:8px;border-radius:50%}
+  .branch-pill.active{box-shadow:0 0 0 1px var(--accent) inset;border-color:var(--accent)}
+
+  .row{padding:3px 0;font-size:13.5px;line-height:1.35;display:flex;align-items:flex-start;gap:2px}
+  .row .toggle{
+    display:inline-block;width:16px;text-align:center;cursor:pointer;background:transparent;border:0;padding:3px 0;
+    color:var(--muted);user-select:none;font-size:10px;
+  }
+  .row .toggle:disabled{cursor:default;opacity:.35}
+  .row .label{
+    cursor:pointer;padding:3px 7px;border-radius:6px;background:transparent;border:0;
+    color:inherit;font:inherit;text-align:left;line-height:1.35;
+  }
+  .row .label:hover{background:rgba(56,189,248,.12)}
+  .row.selected > .label{background:rgba(56,189,248,.22);color:var(--text)}
+  .row .badge{
+    display:inline-block;font-size:10px;padding:1px 6px;border-radius:999px;
+    margin-left:6px;background:var(--chip);color:var(--muted);
+    border:1px solid rgba(148,163,184,.18);
+  }
+  .children{margin-left:14px;border-left:1px dashed rgba(148,163,184,.18);padding-left:10px}
+
+  .detail .breadcrumb{color:var(--muted2);font-size:12px;margin-bottom:8px}
+  .detail .breadcrumb span{cursor:pointer}
+  .detail .breadcrumb span:hover{color:var(--accent)}
+  .detail h2{margin:0 0 4px;font-size:24px;line-height:1.2}
+  .detail .branch-tag{
+    display:inline-block;font-size:11px;padding:3px 9px;border-radius:999px;
+    margin:0 0 14px;font-weight:600;
+  }
+  .detail .desc{
+    color:var(--text);line-height:1.6;font-size:15px;margin-bottom:14px;
+    background:rgba(255,255,255,.66);border-left:3px solid var(--accent);
+    padding:12px 14px;border-radius:0 8px 8px 0;
+  }
+  .section{margin-top:18px}
+  .section h3{
+    margin:0 0 10px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);font-weight:700;
+  }
+  .ex-list{display:flex;flex-direction:column;gap:6px}
+  .ex-list .ex{
+    background:rgba(255,255,255,.66);border:1px solid rgba(148,163,184,.1);
+    border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);
+  }
+  .ex-list .ex::before{content:"▸ ";color:var(--accent2)}
+
+  .rel-list{display:flex;flex-direction:column;gap:6px}
+  .rel{
+    background:rgba(255,255,255,.72);border:1px solid rgba(148,163,184,.12);
+    border-radius:8px;padding:9px 12px;font-size:13px;
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  }
+  .rel .label-tag{
+    font-size:11px;color:var(--accent);background:rgba(56,189,248,.1);
+    border:1px solid rgba(56,189,248,.3);padding:2px 8px;border-radius:999px;
+  }
+  .rel a{color:var(--text);text-decoration:none;font-weight:600;cursor:pointer}
+  .rel a:hover{color:var(--accent)}
+
+  .src-list{display:flex;flex-direction:column;gap:8px}
+  .src{
+    background:rgba(255,255,255,.66);border:1px solid rgba(148,163,184,.12);
+    border-radius:8px;padding:10px 12px;font-size:13px;
+  }
+  .src .t{font-weight:600;color:var(--text);margin-bottom:2px;line-height:1.35}
+  .src .o{color:var(--muted);font-size:11.5px;margin-bottom:4px}
+  .src .o .pill{
+    display:inline-block;background:var(--chip);border:1px solid rgba(148,163,184,.18);
+    padding:1px 7px;border-radius:999px;margin-right:6px;color:var(--text);font-weight:600;
+  }
+  .src a{font-size:12px;word-break:break-all}
+
+  /* ---- Network ---- */
+  .viz-wrap{padding:18px 28px 40px}
+  .viz-card{
+    background:rgba(255,250,243,.86);border:1px solid rgba(148,163,184,.12);
+    border-radius:14px;padding:16px 18px;margin-bottom:18px;
+  }
+  .viz-card h3{margin:0 0 4px;font-size:17px}
+  .viz-card .sub{color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.5}
+  #netHost{
+    position:relative;width:100%;height:680px;
+    background:rgba(255,250,243,.75);border:1px solid rgba(148,163,184,.1);
+    border-radius:10px;overflow:hidden;
+  }
+  #netSvg{width:100%;height:100%;cursor:grab}
+  #netSvg:active{cursor:grabbing}
+  #netLegend{
+    position:absolute;top:10px;left:10px;
+    display:flex;flex-direction:column;gap:4px;
+    background:rgba(255,250,243,.92);padding:10px 12px;border-radius:8px;
+    border:1px solid rgba(148,163,184,.15);max-width:260px;font-size:11.5px;
+  }
+  #netLegend .lr{display:flex;align-items:center;gap:8px;cursor:pointer;padding:2px 0;color:var(--text)}
+  #netLegend .lr.muted{opacity:.35}
+  #netLegend .lr .d{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+  #netLegend .lr .n{flex:1}
+  #netLegend .lr .c{color:var(--muted);font-size:10.5px}
+  #netHud{
+    position:absolute;bottom:10px;right:10px;display:flex;gap:6px;
+  }
+  #netHud .btn{padding:6px 11px;font-size:11.5px}
+  #netTooltip{
+    position:absolute;pointer-events:none;background:rgba(255,250,243,.98);
+    border:1px solid var(--accent);border-radius:8px;padding:8px 10px;
+    font-size:12px;color:var(--text);max-width:260px;display:none;z-index:20;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+  }
+  #netTooltip .t{font-weight:700;margin-bottom:2px}
+  #netTooltip .d{color:var(--muted);font-size:11px;line-height:1.4}
+
+  /* ---- Radial ---- */
+  #sunHost{
+    position:relative;width:100%;height:760px;
+    background:rgba(255,250,243,.75);border:1px solid rgba(148,163,184,.1);
+    border-radius:10px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  #sunSvg{width:100%;height:100%}
+  #sunTooltip{
+    position:absolute;pointer-events:none;background:rgba(255,250,243,.98);
+    border:1px solid var(--accent);border-radius:8px;padding:8px 10px;
+    font-size:12px;color:var(--text);max-width:280px;display:none;z-index:20;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+  }
+  #sunTooltip .t{font-weight:700;margin-bottom:2px}
+  #sunTooltip .p{color:var(--muted2);font-size:10.5px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+  #sunTooltip .d{color:var(--muted);font-size:11px;line-height:1.4}
+  #sunInfo{
+    position:absolute;top:12px;left:12px;background:rgba(255,250,243,.92);
+    padding:10px 12px;border-radius:8px;border:1px solid rgba(148,163,184,.15);
+    font-size:11.5px;color:var(--muted);max-width:240px;
+  }
+  #sunCenter{
+    pointer-events:none;text-anchor:middle;dominant-baseline:central;
+  }
+
+  /* ---- Sources view ---- */
+  .src-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;
+    padding:18px 28px 40px;
+  }
+  .src-card{
+    background:rgba(255,250,243,.86);border:1px solid rgba(148,163,184,.12);
+    border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;
+  }
+  .src-card .authors{
+    display:inline-block;font-size:10.5px;color:var(--accent);font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;
+  }
+  .src-card .t{font-size:14px;font-weight:600;line-height:1.35}
+  .src-card .meta{color:var(--muted);font-size:11.5px}
+  .src-card .meta .typ{
+    background:var(--chip);border:1px solid rgba(148,163,184,.18);
+    padding:1px 7px;border-radius:999px;color:var(--text);margin-right:6px;font-weight:600;
+  }
+  .src-card a{font-size:12px;word-break:break-all;margin-top:auto}
+
+
+
+  /* ---- Evidence-base discovery controls ---- */
+  .source-controls{
+    margin:6px 28px 8px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(255,255,255,.72);box-shadow:0 8px 24px rgba(68,44,25,.05)
+  }
+  .source-control-grid{display:grid;grid-template-columns:2fr repeat(3,minmax(130px,1fr));gap:10px;align-items:end}
+  .source-controls label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+  .source-controls input,.source-controls select{
+    width:100%;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);
+    padding:9px 10px;font:inherit;font-size:13px;font-weight:550;outline:none
+  }
+  .source-controls input:focus,.source-controls select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(155,77,50,.10)}
+  .timeline-control{margin-top:14px;padding-top:12px;border-top:1px solid rgba(148,163,184,.18)}
+  .timeline-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+  .timeline-head strong{font-size:12.5px;color:var(--accent);letter-spacing:0;text-transform:none;white-space:nowrap}
+  .year-histogram{height:46px;display:flex;align-items:flex-end;gap:3px;padding:0 4px 4px;border-bottom:1px solid rgba(68,44,25,.18)}
+  .hist-bar{flex:1;min-width:4px;border-radius:3px 3px 0 0;background:rgba(47,111,115,.22);transition:height .15s,background .15s,opacity .15s;position:relative}
+  .hist-bar.active{background:rgba(47,111,115,.72)}
+  .hist-bar.out{opacity:.32}
+  .range-wrap{position:relative;height:28px;margin-top:4px}
+  .range-wrap input[type="range"]{position:absolute;left:0;right:0;top:4px;width:100%;margin:0;background:transparent;pointer-events:none;-webkit-appearance:none;appearance:none}
+  .range-wrap input[type="range"]::-webkit-slider-runnable-track{height:4px;background:rgba(68,44,25,.16);border-radius:999px}
+  .range-wrap input[type="range"]::-moz-range-track{height:4px;background:rgba(68,44,25,.16);border-radius:999px}
+  .range-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px;margin-top:-6.5px;border-radius:50%;background:var(--accent);border:2px solid var(--panel);box-shadow:0 1px 5px rgba(68,44,25,.22);pointer-events:auto;cursor:grab}
+  .range-wrap input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--accent);border:2px solid var(--panel);box-shadow:0 1px 5px rgba(68,44,25,.22);pointer-events:auto;cursor:grab}
+  .timeline-scale{display:flex;justify-content:space-between;color:var(--muted2);font-size:11.5px;margin-top:-2px}
+  .source-summary{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:10px;color:var(--muted);font-size:12.5px}
+  .source-chip{
+    border:1px solid rgba(148,163,184,.22);background:rgba(255,250,243,.78);color:var(--text);
+    border-radius:999px;padding:4px 8px;font-size:11.5px;cursor:pointer
+  }
+  .source-chip:hover{border-color:var(--accent);color:var(--accent)}
+  .source-reset{white-space:nowrap;padding:9px 12px}
+  .src-card .usage{color:var(--muted2);font-size:11.5px;margin-top:2px}
+  .src-card .concept-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+  .src-card .concept-tag{
+    border:1px solid rgba(47,111,115,.22);background:rgba(47,111,115,.06);color:var(--text);
+    border-radius:999px;padding:3px 7px;font-size:10.8px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+  }
+  .src-card .concept-tag:hover{background:rgba(47,111,115,.12);border-color:var(--accent)}
+  .src-empty{grid-column:1/-1;padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);background:rgba(255,255,255,.55)}
+  #netTieLegend .tie-row{cursor:pointer;border-radius:8px;padding:4px 5px;margin:3px -5px;transition:background .12s, opacity .12s}
+  #netTieLegend .tie-row:hover{background:rgba(47,111,115,.08)}
+  #netTieLegend .tie-row.muted{opacity:.35;text-decoration:line-through}
+  #netTieLegend .filter-note{color:var(--muted2);font-size:10.5px;line-height:1.35;margin-top:7px}
+  @media (max-width:980px){.source-control-grid{grid-template-columns:1fr 1fr}.source-control-grid label:first-child{grid-column:1/-1}}
+  @media (max-width:620px){.source-control-grid{grid-template-columns:1fr}}
+
+  /* ---- About ---- */
+  .about{padding:24px 28px 60px;max-width:920px}
+  .about h2{margin:0 0 14px;font-size:24px}
+  .about h3{margin:24px 0 8px;font-size:16px;color:var(--accent2)}
+  .about p{color:var(--text);font-size:14.5px;line-height:1.65;margin:0 0 12px}
+  .about ul{margin:0 0 14px;padding-left:22px;color:var(--text);font-size:14px;line-height:1.65}
+  .about ul li{margin-bottom:4px}
+  .about .quote{
+    border-left:3px solid var(--accent);padding:10px 14px;
+    background:rgba(255,255,255,.58);border-radius:0 8px 8px 0;
+    color:var(--text);font-size:14px;font-style:italic;margin:14px 0;
+  }
+
+
+  /* ---- Controls, legends and contribution form ---- */
+  .download-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px;align-items:center}
+  .download-row .hint{color:var(--muted2);font-size:12px;margin-left:2px}
+  #netTieLegend{
+    position:absolute;top:10px;right:10px;z-index:3;
+    background:rgba(255,250,243,.94);border:1px solid rgba(148,163,184,.18);
+    border-radius:10px;padding:10px 12px;max-width:300px;font-size:11.5px;
+    box-shadow:0 8px 22px rgba(68,44,25,.08)
+  }
+  #netTieLegend .title{font-weight:800;color:var(--text);margin-bottom:7px;font-size:12px}
+  #netTieLegend .tie-row{display:grid;grid-template-columns:42px 1fr;gap:8px;align-items:center;margin:5px 0;color:var(--text)}
+  #netTieLegend svg{width:42px;height:12px;display:block;overflow:visible}
+  #netTieLegend .small{color:var(--muted2);font-size:10.5px;line-height:1.35;margin-top:6px}
+  .viz-error{
+    max-width:680px;margin:70px auto;padding:20px 22px;border:1px dashed var(--line);border-radius:14px;
+    background:rgba(255,255,255,.76);color:var(--muted);line-height:1.55;font-size:14px;text-align:left
+  }
+  .viz-error b{color:var(--text)}
+  .contact-form{
+    margin:16px 0 22px;padding:16px;border:1px solid var(--line);border-radius:16px;
+    background:rgba(255,255,255,.72);box-shadow:0 8px 24px rgba(68,44,25,.06)
+  }
+  .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .contact-form label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+  .contact-form input,.contact-form select,.contact-form textarea{
+    width:100%;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);
+    padding:10px 11px;font:inherit;font-size:13.5px;font-weight:500;outline:none
+  }
+  .contact-form textarea{min-height:118px;resize:vertical;line-height:1.45}
+  .contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(155,77,50,.10)}
+  .contact-form .full{grid-column:1/-1}
+  .form-note{color:var(--muted2);font-size:12.5px;line-height:1.5;margin:8px 0 0}
+  @media (max-width:720px){.form-grid{grid-template-columns:1fr}#netTieLegend{position:static;margin:10px;max-width:none}}
+
+  /* ---- audit ---- */
+  .audit{padding:24px 28px 60px;max-width:1120px}
+  .audit h2{margin:0 0 10px;font-size:26px}
+  .audit .lead{color:var(--muted);font-size:14.5px;line-height:1.6;max-width:880px;margin-bottom:18px}
+  .audit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px 0}
+  .audit-card{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(68,44,25,.06)}
+  .audit-card .k{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:800;margin-bottom:6px}
+  .audit-card h3{margin:0 0 8px;font-size:16px;color:var(--text)}
+  .audit-card p,.audit-card li{font-size:13.5px;line-height:1.55;color:var(--muted);margin:0 0 7px}
+  .audit-card ul{padding-left:18px;margin:0}
+
+  /* ---- footer ---- */
+  footer{
+    padding:20px 28px;border-top:1px solid rgba(148,163,184,.12);
+    color:var(--muted);font-size:12px;display:flex;flex-wrap:wrap;
+    justify-content:space-between;gap:10px;align-items:center;
+  }
+  footer .dom{color:var(--accent);font-weight:700}
+
+  @media (max-width:880px){
+    .explorer{grid-template-columns:1fr}
+    .tree-pane{border-right:0;border-bottom:1px solid rgba(148,163,184,.12);max-height:380px}
+    .hero h2{font-size:24px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"></div>
+    <div>
+      <h1><span class="dom">networked-resilience.eu</span></h1>
+      <div class="sub">Ontology &amp; taxonomy of networked democratic resilience</div>
+    </div>
+  </div>
+  <div class="search">
+    <input type="search" id="q" placeholder="Search concepts, definitions, sources…" autocomplete="off" />
+    <div class="search-hits" id="searchHits"></div>
+  </div>
+  <div class="stats">
+    <span class="stat"><b id="stNodes">0</b>concepts</span>
+    <span class="stat"><b id="stBranches">0</b>branches</span>
+    <span class="stat"><b id="stRels">0</b>relations</span>
+    <span class="stat"><b id="stSources">0</b>sources</span>
+  </div>
+</header>
+
+<nav class="tabbar" id="tabbar" role="tablist" aria-label="Main views">
+  <button class="tab active" type="button" role="tab" aria-selected="true" aria-controls="viewHome" data-view="viewHome">🏛️ Overview</button>
+  <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="viewExplorer" data-view="viewExplorer">🗂️ Explorer</button>
+  <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="viewNetwork" data-view="viewNetwork">🕸️ Network</button>
+  <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="viewRadial" data-view="viewRadial">🎯 Radial map</button>
+  <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="viewSources" data-view="viewSources">📚 Sources</button>
+  <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="viewAbout" data-view="viewAbout">ℹ️ About</button>
+</nav>
+
+<main>
+
+  <!-- HOME -->
+  <section id="viewHome" class="view active">
+    <div class="hero">
+      <h2>Mapping the connections that help democracy endure.</h2>
+      <p class="lead">
+In recent years, democracy has been tested by rapid change, growing pressures, and complex crises. In this context, we have become more distant from the meaning of democratic concepts in everyday life: what they mean for citizens, how they protect us, and why they matter for our shared future.
+      </p>
+      <p class="sub">
+This platform helps define, map, and illustrate democratic resilience in plain language. It brings together curated knowledge so that democratic resilience becomes easier to understand, discuss, teach, and use, as a practical foundation for protecting rights and freedoms, strengthening security, and supporting a prosperous democratic future.
+      </p>
+      <p class="sub">
+When the connections between actors are open, diverse, trustworthy, and accountable, democracy can better absorb shocks, respond to crises, resist manipulation, and renew itself. When these connections are weakened, captured, polarised, or broken, democracy becomes more fragile. Seeing democracy as a network helps us understand where resilience comes from, where vulnerabilities appear, and where action is needed — through education, legislation, policy, institutional reform, research, civic participation, and collective action.
+      </p>
+      <div class="ctas">
+        <button class="btn primary" data-goto="viewExplorer">Browse the concepts →</button>
+        <button class="btn" data-goto="viewNetwork">See it as a network</button>
+        <button class="btn" data-goto="viewRadial">See it as a radial map</button>
+        <button class="btn ghost" data-goto="viewSources">Sources</button>
+        <button class="btn primary joinCommunityPractice" type="button">Join the community of practice</button>
+      </div>
+    </div>
+
+    <div class="framework">
+      <div class="kicker">The lens we use</div>
+      <h3 class="fw-title">Input → Throughput → Output</h3>
+      <p class="fw-lead">
+        We read democratic resilience as a living cycle. Citizens and their ties feed
+        <b style="color:#2f6f73">inputs</b> into the network; structures, functions, capabilities and
+        rules are the <b style="color:#80588f">throughput</b> — the mechanisms that process them; and
+        democratic goods come out as <b style="color:#c06f2e">outputs</b>. Threats are
+        <b style="color:#b9443f">stressors</b> that bear on every stage.
+        <span class="fw-cite">Analytical lens adapted from Scharpf (1999) and Schmidt (2013), and co-developed in “Building Capacity for Integrated Resilience Research on Ukraine and Beyond: Mixed Methods, Network Analysis and Collaborative Research Design,” co-designed and co-delivered by Dr. Inna Melnykovska and Dr. Silvia Fierăscu, at European University Institute, EUI Widening Europe Programme, Florence, Italy (27-28 April 2026).</span>
+      </p>
+    </div>
+
+    <div id="pillarGroups"></div>
+  </section>
+
+  <!-- EXPLORER -->
+  <section id="viewExplorer" class="view">
+    <div class="explorer">
+      <aside class="tree-pane">
+        <div class="branch-pills" id="branchPills"></div>
+        <div id="tree"></div>
+      </aside>
+      <article class="detail-pane" id="detail">
+        <div class="breadcrumb">Choose a concept on the left.</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- NETWORK -->
+  <section id="viewNetwork" class="view">
+    <div class="viz-wrap">
+      <div class="viz-card">
+        <h3>Interactive concept network</h3>
+        <div class="sub">
+          Each dot is a concept. Lines show how concepts relate — by hierarchy (a sub-concept of)
+          and by curated cross-links (enables, counters, erodes, produces, exploits, chills).
+          Drag nodes, scroll to zoom, click a node to open its definition. Click a branch in the
+          legend to filter.
+        </div>
+        <div class="download-row" aria-label="Network graph downloads">
+          <button class="btn" id="downloadNetworkPng" type="button">Download network PNG</button>
+          <button class="btn" id="downloadNetworkNodesCsv" type="button">Download nodes CSV</button>
+          <button class="btn" id="downloadNetworkLinksCsv" type="button">Download ties CSV</button>
+          <span class="hint">Exports use the current ontology data embedded in this page.</span>
+        </div>
+        <div id="netHost">
+          <svg id="netSvg"></svg>
+          <div id="netLegend"></div>
+          <div id="netTieLegend"></div>
+          <div id="netHud">
+            <button class="btn" id="netReset">↺ Reset view</button>
+          </div>
+          <div id="netTooltip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RADIAL -->
+  <section id="viewRadial" class="view">
+    <div class="viz-wrap">
+      <div class="viz-card">
+        <h3>Radial map of the taxonomy — four layers</h3>
+        <div class="sub">
+          The full vocabulary, organised radially across four layers:
+          <b>root → 8 branches → sub-categories → leaf concepts</b>.
+          Hover a slice for a short definition; click to open the concept in the Explorer.
+        </div>
+        <div class="download-row" aria-label="Radial map downloads">
+          <button class="btn" id="downloadRadialPng" type="button">Download radial PNG</button>
+          <button class="btn" id="downloadRadialCsv" type="button">Download radial CSV</button>
+          <span class="hint">CSV includes id, parent, branch, depth and path.</span>
+        </div>
+        <div id="sunHost">
+          <svg id="sunSvg"></svg>
+          <div id="sunInfo">
+            <b style="color:var(--text)">4 layers:</b><br/>
+            ◦ Centre — networked democratic resilience<br/>
+            ◦ Ring 1 — 8 branches of the ontology<br/>
+            ◦ Ring 2 — sub-categories<br/>
+            ◦ Ring 3 — leaf concepts
+          </div>
+          <div id="sunTooltip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section id="viewSources" class="view">
+    <div class="hero" style="padding-bottom:8px">
+      <div class="kicker">Evidence base</div>
+      <h2 style="font-size:24px">Official, academic and institutional sources</h2>
+      <p class="sub">
+        Each concept is linked to one or more credible source families — academic literature,
+        EU and Council of Europe instruments, OECD/UN/OSCE frameworks, and democracy
+        monitoring programmes. Use the filters below to discover sources by author(s), type,
+        publication period, or the concepts they support.
+      </p>
+    </div>
+    <div class="source-controls" aria-label="Evidence base filters">
+      <div class="source-control-grid">
+        <label>Search
+          <input type="search" id="sourceSearch" placeholder="Search title, author(s), URL, or linked concept…" autocomplete="off" />
+        </label>
+        <label>Type
+          <select id="sourceType"><option value="">All types</option></select>
+        </label>
+        <label>Author(s)
+          <select id="sourceOrg"><option value="">All authors</option></select>
+        </label>
+        <label>Sort
+          <select id="sourceSort">
+            <option value="usage">Most linked concepts</option>
+            <option value="year_desc">Newest first</option>
+            <option value="org">Author(s) A–Z</option>
+            <option value="type">Type A–Z</option>
+          </select>
+        </label>
+        <button class="btn source-reset" id="sourceReset" type="button">Reset</button>
+      </div>
+      <div class="timeline-control" aria-label="Publication year range">
+        <div class="timeline-head">
+          <span>Publication timeline</span>
+          <strong id="sourceYearRangeLabel"></strong>
+        </div>
+        <div class="year-histogram" id="sourceYearHistogram" aria-hidden="true"></div>
+        <div class="range-wrap">
+          <input type="range" id="sourceYearMin" aria-label="Earliest publication year" />
+          <input type="range" id="sourceYearMax" aria-label="Latest publication year" />
+        </div>
+        <div class="timeline-scale"><span id="sourceYearStart"></span><span id="sourceYearEnd"></span></div>
+      </div>
+      <div class="source-summary"><span id="sourceCount"></span></div>
+    </div>
+    <div class="src-grid" id="srcGrid"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="viewAbout" class="view">
+    <div class="about">
+      <h2>About this project</h2>
+      <p>
+        <b>networked-resilience.eu</b> is a plain-language reference for the <i>networked</i> aspects
+        of democratic resilience. Most democracy work focuses on individual institutions — courts,
+        elections, parliaments, the press. This project starts from a different premise: democracies
+        are <b>networks of relationships</b> between citizens, civil society, public bodies, media,
+        researchers and responsible businesses. Their resilience depends on the quality of those
+        connections.
+      </p>
+      <div class="quote">
+        The strength of a democracy is not measured by any single institution, but by the density,
+        diversity and integrity of the ties between them.
+      </div>
+
+      <h3>The lens: input → throughput → output</h3>
+      <p>
+        We read networked democratic resilience as a cycle, using the
+        <b>input → throughput (mechanisms) → output</b> framework adapted from democratic-legitimacy literature and co-developed in
+        “Building Capacity for Integrated Resilience Research on Ukraine and Beyond: Mixed Methods, Network Analysis and Collaborative Research Design,” co-designed and co-delivered by Dr. Inna Melnykovska and Dr. Silvia Fierăscu, at European University Institute, EUI Widening Europe Programme, Florence, Italy (27-28 April 2026).
+        It builds on Fritz Scharpf's distinction between input and output legitimacy and Vivien Schmidt's
+        addition of <i>throughput</i> legitimacy — the quality of the mechanisms in between:
+      </p>
+      <ul>
+        <li><b>Input</b> — who takes part and what flows in (actors, ties).</li>
+        <li><b>Throughput / mechanisms</b> — how the network processes inputs (structures, functions, capabilities, rules).</li>
+        <li><b>Output</b> — the democratic goods produced (outcomes).</li>
+        <li><b>Stressors</b> — threats and shocks bear on every stage; resilience is keeping the cycle running under stress.</li>
+      </ul>
+
+      <h3>What is in the ontology</h3>
+      <p>
+        Eight branches organise the vocabulary across four layers (root → branch → sub-category → leaf),
+        mapped onto the three phases above:
+      </p>
+      <ul>
+        <li><b>Actors</b> — who is in the network</li>
+        <li><b>Ties</b> — what connects them</li>
+        <li><b>Structures</b> — the shapes those connections form</li>
+        <li><b>Functions</b> — what democratic networks actually do</li>
+        <li><b>Threats</b> — what damages the network</li>
+        <li><b>Capabilities</b> — the resilience properties that let networks absorb, adapt and renew</li>
+        <li><b>Rules &amp; governance</b> — the legal and institutional scaffolding</li>
+        <li><b>Outcomes</b> — the democratic goods produced when the network works</li>
+      </ul>
+
+      <h3>How definitions are written</h3>
+      <p>
+        Every entry is written in plain language first. The aim is that a curious citizen,
+        a journalist, a public official or a civil society practitioner can read the definition
+        and immediately know what the concept means and why it matters before going to curated sources.
+      </p>
+
+      <h3>How sources are used</h3>
+      <p>
+        Each concept lists one or more sources that help ground it, but the definitions are author syntheses unless otherwise stated. Sources include the V-Dem Institute,
+        International IDEA, Freedom House, the European Commission (including the Defence of Democracy
+        Package, EDAP, DSA, Anti-SLAPP Directive, Rule of Law Report), the Council of Europe and
+        OSCE/ODIHR, OECD, UNDP, the Carnegie Endowment, and seminal academic work on
+        structural holes and brokerage (Burt), weak ties (Granovetter), networked public spheres
+        (Benkler), the network society (Castells), polycentric governance (Ostrom), the “4 R's” of
+        resilience (Bruneau et al.), democratic legitimacy (Scharpf, Schmidt) and democratic
+        backsliding (Levitsky &amp; Ziblatt, Diamond).
+      </p>
+
+      <h3>Status &amp; how to contribute</h3>
+      <p>
+        This is a v1 reference after an initial traceability pass. The ontology will grow, definitions will be refined, and the
+        source set will deepen. Contributions, corrections and source suggestions are welcome.
+      </p>
+
+      <div class="download-row" style="margin:12px 0 20px">
+        <button class="btn primary joinCommunityPractice" type="button">Join our community of practice</button>
+        <span class="hint">Opens a pre-filled Gmail draft to the Networked Resilience authors.</span>
+      </div>
+
+      <h3>How to cite this website</h3>
+      <p>
+        Fierăscu, S., &amp; Melnykovska, I. (2026). <i>Networked Democratic Resilience Ontology</i> (Version 1) [Website]. Networked Resilience. https://networked-resilience.eu
+      </p>
+
+      <h3>Transparency note</h3>
+      <p>
+        This website is authored and curated by Silvia Fierăscu, PhD and Inna Melnykovska, PhD. AI tools were used to support drafting, editing, coding, structuring, and visual design. All definitions, source links, conceptual choices, and editorial decisions remain the responsibility of the authors.
+      </p>
+
+      <h3>Propose a correction or addition</h3>
+      <p>
+        Use this form to prepare a contribution: a definition correction, a new concept, a source that should be linked to a concept,
+        or a proposed relation between concepts. All fields are required.
+      </p>
+      <form id="contributionForm" class="contact-form">
+        <div class="form-grid">
+          <label>First name
+            <input id="contribFirstName" name="first_name" type="text" autocomplete="given-name" placeholder="First name" required />
+          </label>
+          <label>Last name
+            <input id="contribLastName" name="last_name" type="text" autocomplete="family-name" placeholder="Last name" required />
+          </label>
+          <label>Affiliation
+            <input id="contribAffiliation" name="affiliation" type="text" autocomplete="organization" placeholder="University, organisation, institution, company" required />
+          </label>
+          <label>Email
+            <input id="contribEmail" name="email" type="email" autocomplete="email" placeholder="email@example.org" required />
+          </label>
+          <label>Type of person
+            <select id="contribPersonType" name="person_type" required>
+              <option value="" selected disabled>Choose one</option>
+              <option>Academic researcher</option>
+              <option>Business person</option>
+              <option>Government official</option>
+              <option>NGO representative</option>
+            </select>
+          </label>
+          <label>Proposal type
+            <select id="contribType" name="type" required>
+              <option value="" selected disabled>Choose proposal type</option>
+              <option>Correction to an existing definition</option>
+              <option>Addition of a new concept</option>
+              <option>Link a source to a concept</option>
+              <option>Change or add a concept relation</option>
+              <option>Other suggestion</option>
+            </select>
+          </label>
+          <label>Concept name
+            <input id="contribConcept" name="concept" type="text" placeholder="e.g. 2.1 Trust ties" required />
+          </label>
+          <label>Source title
+            <input id="contribSource" name="source" type="text" placeholder="Full title of the source, report, paper, law, dataset, or webpage" required />
+          </label>
+          <label class="full">Proposed change
+            <textarea id="contribMessage" name="message" placeholder="Describe the correction, new concept, source link, or relation you propose. Please add a short justification and, where possible, exact page / section references." required></textarea>
+          </label>
+        </div>
+        <div class="download-row" style="margin-bottom:0">
+          <button class="btn primary" type="submit">Open pre-filled Gmail draft</button>
+          <button class="btn" id="sendProposalDefaultEmail" type="button">Open default email app</button>
+          <button class="btn" id="downloadProposalJson" type="button">Download proposal JSON</button>
+        </div>
+        <p class="form-note">No data is stored by this static page. Gmail opens in a browser tab. The default email app option uses a mailto link and depends on the visitor's device/browser settings.</p>
+      </form>
+
+      <p style="color:var(--muted2);font-size:12px;margin-top:24px">
+        © Silvia Fierăscu, PhD and Inna Melnykovska, PhD. Released under CC BY 4.0. The opinions expressed are those of the authors and do not
+        necessarily reflect the views of any cited institution.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div><span class="dom">networked-resilience.eu</span> · v1 · Silvia Fierăscu, PhD &amp; Inna Melnykovska, PhD</div>
+</footer>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+const PLATFORM_VERSION = "v1";
+/* ============================================================
+   DATA: Ontology of Networked Democratic Resilience
+   ============================================================ */
+const BRANCHES = {
+  "actors": {
+    "name": "1. Network actors",
+    "color": "#4d669a",
+    "short": "1",
+    "blurb": "Who is in the democratic network."
+  },
+  "ties": {
+    "name": "2. Network ties",
+    "color": "#b45f7a",
+    "short": "2",
+    "blurb": "What connects the actors."
+  },
+  "structures": {
+    "name": "3. Network structures",
+    "color": "#2f7d52",
+    "short": "3",
+    "blurb": "The shapes those connections form."
+  },
+  "functions": {
+    "name": "4. Network functions",
+    "color": "#c98217",
+    "short": "4",
+    "blurb": "What democratic networks do."
+  },
+  "threats": {
+    "name": "5. Network threats",
+    "color": "#b9443f",
+    "short": "5",
+    "blurb": "What damages the network."
+  },
+  "capabilities": {
+    "name": "6. Resilience capabilities",
+    "color": "#80588f",
+    "short": "6",
+    "blurb": "Properties that let networks absorb, adapt and renew."
+  },
+  "rules": {
+    "name": "7. Enabling rules & governance",
+    "color": "#2f6f73",
+    "short": "7",
+    "blurb": "Legal and institutional scaffolding."
+  },
+  "outcomes": {
+    "name": "8. Democratic outcomes",
+    "color": "#c06f2e",
+    "short": "8",
+    "blurb": "Democratic goods produced when the network works."
+  }
+};
+
+/* Input → Throughput (mechanisms) → Output framework.
+   Analytical lens adapted from Scharpf (1999) and Schmidt (2013).
+   “Building Capacity for Integrated Resilience Research on Ukraine and Beyond: Mixed Methods, Network Analysis and Collaborative Research Design,” co-designed and co-delivered by Dr. Inna Melnykovska and Dr. Silvia Fierăscu, at European University Institute, EUI Widening Europe Programme, Florence, Italy (27-28 April 2026). */
+const PHASES = {
+  "input": {
+    "name": "Input",
+    "color": "#2f6f73",
+    "blurb": "What enters the democratic network — who takes part, and what flows between them. The “by the people” side: participation, demands, information and resources fed in.",
+    "branches": [
+      "actors",
+      "ties"
+    ]
+  },
+  "throughput": {
+    "name": "Throughput — mechanisms",
+    "color": "#80588f",
+    "blurb": "The black box in between — how the network processes its inputs. The structures, functions, resilience capabilities and rules that turn participation into action. The “with the people” side.",
+    "branches": [
+      "structures",
+      "functions",
+      "capabilities",
+      "rules"
+    ]
+  },
+  "output": {
+    "name": "Output",
+    "color": "#c06f2e",
+    "blurb": "What the network produces — the democratic goods that come out the other end. The “for the people” side: trust, accountability, responsive policy and renewal.",
+    "branches": [
+      "outcomes"
+    ]
+  },
+  "stressor": {
+    "name": "Stressors — cross-cutting",
+    "color": "#b9443f",
+    "blurb": "Threats and shocks act on every stage: degrading inputs, capturing mechanisms, hollowing outputs. Resilience is the capacity to keep the input→throughput→output cycle running under stress.",
+    "branches": [
+      "threats"
+    ]
+  }
+};
+function phaseForBranch(bk){
+  for (const p of Object.values(PHASES)) if (p.branches.includes(bk)) return p;
+  return null;
+}
+
+const SOURCES = {
+  "vdem": {
+    "org": "V-Dem Institute",
+    "title": "Democracy Report 2026 — Unraveling The Democratic Era?",
+    "year": 2026,
+    "type": "Report",
+    "url": "https://v-dem.net/publications/democracy-reports/"
+  },
+  "idea_gsod": {
+    "org": "International IDEA",
+    "title": "The Global State of Democracy 2025 — Democracy on the Move",
+    "year": 2025,
+    "type": "Report",
+    "url": "https://www.idea.int/publications/catalogue/global-state-democracy-2025-democracy-on-the-move"
+  },
+  "fh_fiw": {
+    "org": "Freedom House",
+    "title": "Freedom in the World 2026",
+    "year": 2026,
+    "type": "Index",
+    "url": "https://freedomhouse.org/report/freedom-world"
+  },
+  "fh_fotn": {
+    "org": "Freedom House",
+    "title": "Freedom on the Net 2025",
+    "year": 2025,
+    "type": "Index",
+    "url": "https://freedomhouse.org/report/freedom-net"
+  },
+  "ec_ddp": {
+    "org": "European Commission",
+    "title": "Defence of Democracy Package — proposal presented 12 December 2023",
+    "year": 2023,
+    "type": "EU policy",
+    "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/new-push-european-democracy/defence-democracy_en"
+  },
+  "ec_edap": {
+    "org": "European Commission",
+    "title": "European Democracy Action Plan",
+    "year": 2020,
+    "type": "EU policy",
+    "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/new-push-european-democracy/european-democracy-action-plan_en"
+  },
+  "ec_dsa": {
+    "org": "European Commission",
+    "title": "Digital Services Act",
+    "year": 2022,
+    "type": "EU law",
+    "url": "https://digital-strategy.ec.europa.eu/en/policies/digital-services-act-package"
+  },
+  "ec_dma": {
+    "org": "European Commission",
+    "title": "Digital Markets Act",
+    "year": 2022,
+    "type": "EU law",
+    "url": "https://digital-markets-act.ec.europa.eu/index_en"
+  },
+  "ec_slapp": {
+    "org": "European Union",
+    "title": "Anti-SLAPP Directive (EU) 2024/1069",
+    "year": 2024,
+    "type": "EU law",
+    "url": "https://eur-lex.europa.eu/eli/dir/2024/1069/oj"
+  },
+  "ec_rol": {
+    "org": "European Commission",
+    "title": "Rule of Law Report 2025",
+    "year": 2025,
+    "type": "EU report",
+    "url": "https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/upholding-rule-law/rule-law/annual-rule-law-cycle/2025-rule-law-report_en"
+  },
+  "ec_emfa": {
+    "org": "European Union",
+    "title": "European Media Freedom Act (Regulation (EU) 2024/1083)",
+    "year": 2024,
+    "type": "EU law",
+    "url": "https://eur-lex.europa.eu/eli/reg/2024/1083/oj"
+  },
+  "coe_venice": {
+    "org": "Council of Europe — Venice Commission",
+    "title": "Rule of Law Checklist (CDL-AD(2016)007)",
+    "year": 2016,
+    "type": "Framework",
+    "url": "https://www.venice.coe.int/webforms/documents/?pdf=CDL-AD(2016)007-e"
+  },
+  "osce_odihr": {
+    "org": "OSCE/ODIHR",
+    "title": "Election Observation — Methodology & Reports",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://www.osce.org/odihr/elections"
+  },
+  "oecd_trust": {
+    "org": "OECD",
+    "title": "Trust in Government — OECD Survey on Drivers of Trust 2024",
+    "year": 2024,
+    "type": "Report",
+    "url": "https://www.oecd.org/governance/trust-in-government/"
+  },
+  "oecd_rdi": {
+    "org": "OECD",
+    "title": "Reinforcing Democracy Initiative — Action plans and 2024 progress overview",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://www.oecd.org/governance/reinforcing-democracy/"
+  },
+  "oecd_og": {
+    "org": "OECD",
+    "title": "Open Government Review",
+    "year": 2023,
+    "type": "Framework",
+    "url": "https://www.oecd.org/gov/open-government/"
+  },
+  "undp_dg": {
+    "org": "UNDP",
+    "title": "Democratic Governance — Programme",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://www.undp.org/democratic-governance"
+  },
+  "carnegie": {
+    "org": "Carnegie Endowment for International Peace",
+    "title": "Democracy, Conflict and Governance Program",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://carnegieendowment.org/programs/democracy/"
+  },
+  "ecnl": {
+    "org": "ECNL",
+    "title": "Civic Space — Resources & Standards",
+    "year": 2024,
+    "type": "Resource",
+    "url": "https://ecnl.org/topics/civic-space"
+  },
+  "civicus": {
+    "org": "CIVICUS",
+    "title": "CIVICUS Monitor — Tracking Civic Space; Global Findings 2025",
+    "year": 2025,
+    "type": "Index",
+    "url": "https://monitor.civicus.org/"
+  },
+  "dri": {
+    "org": "Democracy Reporting International",
+    "title": "Democracy & Digitalisation programmes",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://democracy-reporting.org/"
+  },
+  "ifes": {
+    "org": "IFES",
+    "title": "Elections & Political Process programming",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://www.ifes.org/"
+  },
+  "diamond": {
+    "org": "Larry Diamond (Stanford CDDRL)",
+    "title": "Essays on democratic backsliding and renewal",
+    "year": 2021,
+    "type": "Academic",
+    "url": "https://cddrl.fsi.stanford.edu/"
+  },
+  "burt": {
+    "org": "Ronald S. Burt",
+    "title": "Structural Holes: The Social Structure of Competition; and Brokerage and Closure: An Introduction to Social Capital",
+    "year": 1992,
+    "type": "Academic",
+    "url": "https://www.hup.harvard.edu/books/9780674843714"
+  },
+  "granovetter": {
+    "org": "Mark Granovetter",
+    "title": "The Strength of Weak Ties (American Journal of Sociology, 78(6))",
+    "year": 1973,
+    "type": "Academic",
+    "url": "https://www.jstor.org/stable/2776392"
+  },
+  "schmidt": {
+    "org": "Vivien A. Schmidt",
+    "title": "Democracy and Legitimacy in the EU Revisited: Input, Output and ‘Throughput’ (Political Studies, 61(1))",
+    "year": 2013,
+    "type": "Academic",
+    "url": "https://doi.org/10.1111/j.1467-9248.2012.00962.x"
+  },
+  "scharpf": {
+    "org": "Fritz W. Scharpf",
+    "title": "Governing in Europe: Effective and Democratic?",
+    "year": 1999,
+    "type": "Academic",
+    "url": "https://doi.org/10.1093/acprof:oso/9780198295457.001.0001"
+  },
+  "benkler": {
+    "org": "Yochai Benkler",
+    "title": "The Wealth of Networks: How Social Production Transforms Markets and Freedom",
+    "year": 2006,
+    "type": "Academic",
+    "url": "http://www.benkler.org/Benkler_Wealth_Of_Networks.pdf"
+  },
+  "castells": {
+    "org": "Manuel Castells",
+    "title": "The Rise of the Network Society (The Information Age, vol. I)",
+    "year": 2010,
+    "type": "Academic",
+    "url": "https://www.wiley.com/en-us/9781405196864"
+  },
+  "levitsky": {
+    "org": "Steven Levitsky & Daniel Ziblatt",
+    "title": "How Democracies Die",
+    "year": 2018,
+    "type": "Academic",
+    "url": "https://www.penguinrandomhouse.com/books/562246/how-democracies-die-by-steven-levitsky-and-daniel-ziblatt/"
+  },
+  "bruneau4r": {
+    "org": "Bruneau, Chang, Eguchi et al.",
+    "title": "A Framework to Quantitatively Assess and Enhance Seismic Resilience (the ‘4 R's’: Robustness, Redundancy, Resourcefulness, Rapidity)",
+    "year": 2003,
+    "type": "Academic",
+    "url": "https://doi.org/10.1193/1.1623497"
+  },
+  "ostrom": {
+    "org": "Elinor Ostrom",
+    "title": "Polycentric Systems for Coping with Collective Action (Global Environmental Change, 20)",
+    "year": 2010,
+    "type": "Academic",
+    "url": "https://doi.org/10.1016/j.gloenvcha.2010.07.004"
+  },
+  "nato_stratcom": {
+    "org": "NATO StratCom Centre of Excellence",
+    "title": "Strategic Communications & Disinformation research",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://stratcomcoe.org/"
+  },
+  "eu_eeas": {
+    "org": "EEAS — EU East StratCom Task Force",
+    "title": "EUvsDisinfo — Foreign Information Manipulation & Interference",
+    "year": 2024,
+    "type": "Programme",
+    "url": "https://euvsdisinfo.eu/"
+  },
+  "rsf": {
+    "org": "Reporters Without Borders",
+    "title": "World Press Freedom Index 2026",
+    "year": 2026,
+    "type": "Index",
+    "url": "https://rsf.org/en/2026-rsf-index-press-freedom-25-year-low"
+  },
+  "article19": {
+    "org": "ARTICLE 19",
+    "title": "Freedom of Expression standards & analysis",
+    "year": 2024,
+    "type": "Resource",
+    "url": "https://www.article19.org/"
+  },
+  "ogp": {
+    "org": "Open Government Partnership",
+    "title": "Action Plans & Open Government standards",
+    "year": 2024,
+    "type": "Network",
+    "url": "https://www.opengovpartnership.org/"
+  },
+  "edelman": {
+    "org": "Edelman",
+    "title": "2026 Edelman Trust Barometer",
+    "year": 2026,
+    "type": "Survey",
+    "url": "https://www.edelman.com/trust/2026/trust-barometer"
+  },
+  "bertelsmann": {
+    "org": "Bertelsmann Stiftung",
+    "title": "Sustainable Governance Indicators (SGI 2024)",
+    "year": 2024,
+    "type": "Index",
+    "url": "https://www.sgi-network.org/"
+  },
+  "gdpr": {
+    "org": "European Union",
+    "title": "General Data Protection Regulation (Regulation (EU) 2016/679)",
+    "year": 2016,
+    "type": "EU law",
+    "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+  },
+  "unesco_pl": {
+    "org": "IFLA / UNESCO",
+    "title": "IFLA-UNESCO Public Library Manifesto 2022",
+    "year": 2022,
+    "type": "Framework",
+    "url": "https://unesdoc.unesco.org/ark:/48223/pf0000385149"
+  }
+};
+
+/* Nodes — depth 1 (branches), 2 (sub-categories), 3 (leaf), 4 (sub-leaf where needed).
+   Definitions are plain-language author synthesis linked to source families, not verbatim definitions. */
+const NODES = [
+  {
+    "id": "actors",
+    "parent": "root",
+    "branch": "actors",
+    "depth": 1,
+    "name": "1. Network actors",
+    "description": "The people, groups, institutions and organisations that form a democratic network. Resilience starts with who is in the network — and who is left out.",
+    "sources": [
+      "vdem",
+      "idea_gsod",
+      "civicus"
+    ]
+  },
+  {
+    "id": "citizens",
+    "parent": "actors",
+    "branch": "actors",
+    "depth": 2,
+    "name": "1.1 Citizens & civic groups",
+    "description": "Individual citizens and the loose, voluntary groupings they form — neighbourhood circles, parents' groups, mutual-aid chats, online communities. The base layer of every democratic network.",
+    "examples": [
+      "neighbourhood associations",
+      "parent groups at schools",
+      "mutual-aid WhatsApp chats",
+      "online citizen forums"
+    ],
+    "sources": [
+      "burt",
+      "oecd_trust",
+    ]
+  },
+  {
+    "id": "active_citizens",
+    "parent": "citizens",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.1.1 Active citizens",
+    "description": "Individuals who do more than vote: they show up, speak up, volunteer, donate, organise. Active citizenship is the bedrock of every other democratic activity.",
+    "sources": [
+      "burt",
+      "oecd_trust",
+    ]
+  },
+  {
+    "id": "voluntary_assoc",
+    "parent": "citizens",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.1.2 Voluntary associations",
+    "description": "Self-organised groups people join for a shared purpose — sports clubs, parents' committees, cultural circles. They build the everyday trust ('social capital') democracies live on.",
+    "sources": [
+      "burt",
+    ]
+  },
+  {
+    "id": "grassroots",
+    "parent": "citizens",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.1.3 Grassroots movements",
+    "description": "Bottom-up campaigns that emerge around an issue — environmental defenders, civic platforms, protest movements. They put new demands onto the political agenda.",
+    "sources": [
+      "civicus",
+      "ecnl"
+    ]
+  },
+  {
+    "id": "diaspora",
+    "parent": "citizens",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.1.4 Diaspora communities",
+    "description": "Citizens living abroad who stay engaged with their home democracy — voting from abroad, sending information, funding civic work. A long, often under-counted tie in the democratic network.",
+    "sources": [
+      "idea_gsod"
+    ]
+  },
+  {
+    "id": "cso",
+    "parent": "actors",
+    "branch": "actors",
+    "depth": 2,
+    "name": "1.2 Civil society organisations",
+    "description": "Registered, organised non-state bodies pursuing a public-interest mission — advocacy NGOs, watchdogs, think tanks, foundations. The professionalised layer of citizen action.",
+    "sources": [
+      "ecnl",
+      "civicus",
+      "undp_dg"
+    ]
+  },
+  {
+    "id": "advocacy_ngo",
+    "parent": "cso",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.2.1 Advocacy NGOs",
+    "description": "Organisations that push for policy change on a specific issue — human rights, environment, equality, transparency. They translate citizen concerns into institutional pressure.",
+    "sources": [
+      "ecnl",
+      "article19"
+    ]
+  },
+  {
+    "id": "watchdogs",
+    "parent": "cso",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.2.2 Watchdogs",
+    "description": "Organisations whose core mission is to monitor power and expose wrongdoing — anti-corruption groups, election monitors, fact-checkers, transparency NGOs.",
+    "sources": [
+      "ifes",
+      "ogp"
+    ]
+  },
+  {
+    "id": "fact_checkers",
+    "parent": "watchdogs",
+    "branch": "actors",
+    "depth": 4,
+    "name": "1.2.2.1 Fact-checking organisations",
+    "description": "Independent newsrooms or NGOs that verify claims in the public sphere against evidence and publish corrections — a frontline defence against information disorder.",
+    "sources": [
+      "ec_edap",
+      "eu_eeas"
+    ]
+  },
+  {
+    "id": "transparency_orgs",
+    "parent": "watchdogs",
+    "branch": "actors",
+    "depth": 4,
+    "name": "1.2.2.2 Transparency & anti-corruption organisations",
+    "description": "Specialised NGOs that track public budgets, procurement, beneficial ownership and conflicts of interest — making the state legible to citizens.",
+    "sources": [
+      "ogp",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "think_tanks",
+    "parent": "cso",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.2.3 Think tanks & policy institutes",
+    "description": "Research-driven organisations producing policy analysis and proposals. They give the network a slower, evidence-based deliberative layer between citizens and government.",
+    "sources": [
+      "carnegie",
+      "dri"
+    ]
+  },
+  {
+    "id": "foundations",
+    "parent": "cso",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.2.4 Foundations & funders",
+    "description": "Philanthropic actors that finance civic infrastructure: independent media, watchdogs, research, capacity-building. Their independence and pluralism is itself a resilience factor.",
+    "sources": [
+      "civicus",
+      "ecnl"
+    ]
+  },
+  {
+    "id": "institutions",
+    "parent": "actors",
+    "branch": "actors",
+    "depth": 2,
+    "name": "1.3 Public institutions",
+    "description": "The formal organs of the state: parliaments, governments, courts, regulators, oversight bodies, local authorities. The state is not the enemy of the network — when it works, it is its anchor.",
+    "sources": [
+      "coe_venice",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "parliaments",
+    "parent": "institutions",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.3.1 Parliaments",
+    "description": "Elected legislatures that pass laws, scrutinise the executive and represent citizens. Their effectiveness as a network node depends on real plurality, committee strength and openness.",
+    "sources": [
+      "idea_gsod",
+      "coe_venice"
+    ]
+  },
+  {
+    "id": "executive",
+    "parent": "institutions",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.3.2 Executive bodies",
+    "description": "Governments, ministries and agencies that implement law and deliver services. In a resilient network they are bound by the rule of law and open to civic input — not above it.",
+    "sources": [
+      "coe_venice",
+      "oecd_og"
+    ]
+  },
+  {
+    "id": "oversight_bodies",
+    "parent": "institutions",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.3.3 Independent oversight",
+    "description": "Bodies designed to check power from inside the state: ombudspersons, audit offices, electoral management bodies, data-protection authorities. Their independence is a load-bearing wall.",
+    "sources": [
+      "coe_venice",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "ombudsperson",
+    "parent": "oversight_bodies",
+    "branch": "actors",
+    "depth": 4,
+    "name": "1.3.3.1 Ombudsperson / human-rights institutions",
+    "description": "National institutions that receive complaints from citizens about state action and recommend remedies — a low-cost, accessible accountability channel.",
+    "sources": [
+      "coe_venice",
+      "undp_dg"
+    ]
+  },
+  {
+    "id": "audit_offices",
+    "parent": "oversight_bodies",
+    "branch": "actors",
+    "depth": 4,
+    "name": "1.3.3.2 Supreme audit institutions",
+    "description": "Independent auditors of public spending. They expose waste and fraud, and feed data into investigative journalism and civic oversight.",
+    "sources": [
+      "ec_rol",
+      "ogp"
+    ]
+  },
+  {
+    "id": "electoral_mgmt",
+    "parent": "oversight_bodies",
+    "branch": "actors",
+    "depth": 4,
+    "name": "1.3.3.3 Electoral management bodies",
+    "description": "Authorities that run elections — voter rolls, ballots, results. Their professionalism, independence and transparency directly determine election integrity.",
+    "sources": [
+      "ifes",
+      "osce_odihr"
+    ]
+  },
+  {
+    "id": "judiciary",
+    "parent": "institutions",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.3.4 Independent judiciary",
+    "description": "Courts that decide cases without political instruction. They enforce the rules of the game and protect the rights that make networked action possible.",
+    "sources": [
+      "coe_venice",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "local_gov",
+    "parent": "institutions",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.3.5 Local government",
+    "description": "Municipalities and regions are the level of government closest to citizens. They are also where most everyday democratic ties are tested and rebuilt.",
+    "sources": [
+      "oecd_og",
+      "undp_dg"
+    ]
+  },
+  {
+    "id": "media_knowledge",
+    "parent": "actors",
+    "branch": "actors",
+    "depth": 2,
+    "name": "1.4 Media & knowledge actors",
+    "description": "Organisations that produce, curate and verify the information citizens use to make political judgements: journalism, public-service media, universities, libraries, cultural institutions.",
+    "sources": [
+      "rsf",
+      "ec_emfa",
+      "article19"
+    ]
+  },
+  {
+    "id": "independent_media",
+    "parent": "media_knowledge",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.4.1 Independent journalism",
+    "description": "News organisations editorially independent from government and dominant economic interests. Without them, the network has no shared reality to act on.",
+    "sources": [
+      "rsf",
+      "ec_emfa"
+    ]
+  },
+  {
+    "id": "public_media",
+    "parent": "media_knowledge",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.4.2 Public-service media",
+    "description": "Publicly funded broadcasters with a legal mandate to inform, educate and serve plural audiences — buffered against both market pressure and political capture.",
+    "sources": [
+      "ec_emfa",
+      "article19"
+    ]
+  },
+  {
+    "id": "academia",
+    "parent": "media_knowledge",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.4.3 Academia & researchers",
+    "description": "Universities and research institutes producing peer-reviewed knowledge. They give democratic deliberation a longer time horizon than the news cycle.",
+    "sources": [
+      "carnegie",
+      "vdem"
+    ]
+  },
+  {
+    "id": "libraries_culture",
+    "parent": "media_knowledge",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.4.4 Libraries & cultural institutions",
+    "description": "Public libraries, museums, archives and cultural spaces — neutral, low-threshold places where citizens can access information, deliberate and meet.",
+    "sources": [
+      "unesco_pl",
+      "benkler"
+    ]
+  },
+  {
+    "id": "private_sector",
+    "parent": "actors",
+    "branch": "actors",
+    "depth": 2,
+    "name": "1.5 Private sector",
+    "description": "Companies are part of the democratic network whether they want to be or not — through the platforms they run, the infrastructure they operate, and the standards they choose to uphold.",
+    "sources": [
+      "ec_dsa",
+      "ec_dma"
+    ]
+  },
+  {
+    "id": "platforms_tech",
+    "parent": "private_sector",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.5.1 Online platforms & tech companies",
+    "description": "Search engines, social platforms, messaging services and AI providers that mediate most public communication. Their design choices have democratic consequences.",
+    "sources": [
+      "ec_dsa",
+      "ec_dma",
+      "fh_fotn"
+    ]
+  },
+  {
+    "id": "critical_operators",
+    "parent": "private_sector",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.5.2 Operators of critical services",
+    "description": "Energy, telecoms, banking, water, transport — the companies whose continuity citizens depend on. Their cybersecurity and continuity is a democratic-resilience issue.",
+    "sources": [
+      "ec_ddp"
+    ]
+  },
+  {
+    "id": "responsible_business",
+    "parent": "private_sector",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.5.3 Responsible businesses",
+    "description": "Companies that adopt human-rights due diligence, transparent lobbying and civic engagement — strengthening rather than eroding democratic norms.",
+    "sources": [
+      "ogp",
+      "oecd_og"
+    ]
+  },
+  {
+    "id": "international",
+    "parent": "actors",
+    "branch": "actors",
+    "depth": 2,
+    "name": "1.6 International & transnational actors",
+    "description": "Bodies and networks that act across borders to support democratic resilience — EU institutions, Council of Europe and OSCE, UN agencies, and transnational civic networks.",
+    "sources": [
+      "ec_ddp",
+      "coe_venice",
+      "osce_odihr",
+      "undp_dg"
+    ]
+  },
+  {
+    "id": "eu_inst",
+    "parent": "international",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.6.1 EU institutions",
+    "description": "The European Commission, Parliament, Council and EU agencies — sources of common rules (DSA, EMFA, anti-SLAPP) and political conditionality on rule-of-law standards.",
+    "sources": [
+      "ec_ddp",
+      "ec_dsa",
+      "ec_emfa",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "coe_osce",
+    "parent": "international",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.6.2 Council of Europe & OSCE",
+    "description": "Pan-European bodies that set rule-of-law, human-rights and election standards — Venice Commission, ECtHR, ODIHR election observation, Representative on Freedom of the Media.",
+    "sources": [
+      "coe_venice",
+      "osce_odihr"
+    ]
+  },
+  {
+    "id": "un_agencies",
+    "parent": "international",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.6.3 UN agencies",
+    "description": "UNDP, OHCHR, UNESCO and others — global frameworks for democratic governance, human rights and access to information.",
+    "sources": [
+      "undp_dg"
+    ]
+  },
+  {
+    "id": "transnational_civic",
+    "parent": "international",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.6.4 Transnational civic networks",
+    "description": "Cross-border alliances of NGOs, journalists, scholars and activists — OGP, CIVICUS, ICFJ, GFMD — that share standards and back each other when one node is under pressure.",
+    "sources": [
+      "ogp",
+      "civicus"
+    ]
+  },
+  {
+    "id": "political_intermediaries",
+    "parent": "actors",
+    "branch": "actors",
+    "depth": 2,
+    "name": "1.7 Political & social intermediaries",
+    "description": "Actors that translate social interests into organised political voice, representation, bargaining or community leadership. They can bridge citizens and institutions, but can also become channels of exclusion or patronage.",
+    "sources": [
+      "idea_gsod",
+      "vdem",
+      "undp_dg",
+      "bertelsmann"
+    ]
+  },
+  {
+    "id": "political_parties",
+    "parent": "political_intermediaries",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.7.1 Political parties",
+    "description": "Organisations that aggregate interests, recruit leaders, compete for office and structure representation. Parties are democratic connectors when internally plural and accountable; they become vulnerabilities when captured by narrow interests or personalist leadership.",
+    "sources": [
+      "idea_gsod",
+      "vdem",
+      "levitsky"
+    ]
+  },
+  {
+    "id": "electoral_campaigns",
+    "parent": "political_intermediaries",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.7.2 Electoral campaigns",
+    "description": "Temporary but intensive networks of candidates, parties, volunteers, donors, consultants, platforms and media. Campaigns mobilise participation and agenda attention, but also concentrate risks around money, microtargeting and manipulation.",
+    "sources": [
+      "osce_odihr",
+      "idea_gsod",
+      "fh_fotn"
+    ]
+  },
+  {
+    "id": "trade_unions",
+    "parent": "political_intermediaries",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.7.3 Trade unions",
+    "description": "Organised worker associations that bargain, represent workplace interests and connect economic life to democratic voice. They can widen participation by giving collective capacity to people who would otherwise act alone.",
+    "sources": [
+      "undp_dg",
+      "oecd_rdi",
+      "idea_gsod"
+    ]
+  },
+  {
+    "id": "professional_associations",
+    "parent": "political_intermediaries",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.7.4 Professional associations",
+    "description": "Bodies that organise professional fields such as law, medicine, education, journalism, engineering or public administration. They maintain standards, circulate expertise and can defend professional independence under pressure.",
+    "sources": [
+      "oecd_rdi",
+      "bertelsmann",
+      "ogp"
+    ]
+  },
+  {
+    "id": "religious_community_orgs",
+    "parent": "political_intermediaries",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.7.5 Religious & community organisations",
+    "description": "Local congregations, community centres and identity-based organisations that provide trust, care and mobilisation capacity. In resilient democracies they support plural belonging rather than exclusionary mobilisation.",
+    "sources": [
+      "civicus",
+      "burt",
+      "carnegie"
+    ]
+  },
+  {
+    "id": "local_deliberative_bodies",
+    "parent": "political_intermediaries",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.7.6 Local deliberative bodies",
+    "description": "Citizens' assemblies, participatory budgeting forums, neighbourhood councils and other spaces where residents deliberate with each other and with public authorities. They make democracy visible in everyday governance.",
+    "sources": [
+      "oecd_og",
+      "ogp",
+      "undp_dg"
+    ]
+  },
+  {
+    "id": "patronage_clientelism",
+    "parent": "political_intermediaries",
+    "branch": "actors",
+    "depth": 3,
+    "name": "1.7.7 Patronage & clientelistic networks",
+    "description": "Informal exchange networks that trade jobs, favours, contracts or protection for political loyalty. They are real networks inside democratic systems, but they corrode equal citizenship, accountability and merit-based institutions.",
+    "sources": [
+      "vdem",
+      "levitsky",
+      "bertelsmann"
+    ]
+  },
+  {
+    "id": "ties",
+    "parent": "root",
+    "branch": "ties",
+    "depth": 1,
+    "name": "2. Network ties",
+    "description": "The kinds of relationships that connect democratic actors. Resilience depends not just on who is in the network, but on what flows between them.",
+    "sources": [
+      "granovetter",
+      "castells",
+      "benkler"
+    ]
+  },
+  {
+    "id": "trust_ties",
+    "parent": "ties",
+    "branch": "ties",
+    "depth": 2,
+    "name": "2.1 Trust ties",
+    "description": "Working relationships where actors are willing to rely on each other's word, competence and good faith. Trust ties are slow to build, fast to lose, and the precondition for almost everything else.",
+    "sources": [
+      "burt",
+      "oecd_trust",
+      "edelman"
+    ]
+  },
+  {
+    "id": "info_flows",
+    "parent": "ties",
+    "branch": "ties",
+    "depth": 2,
+    "name": "2.2 Information flows",
+    "description": "The channels along which facts, evidence, claims and warnings travel — between media and citizens, between watchdogs and authorities, across borders. Resilient networks keep them open, accurate and two-way.",
+    "sources": [
+      "benkler",
+      "castells",
+      "ec_emfa"
+    ]
+  },
+  {
+    "id": "resource_flows",
+    "parent": "ties",
+    "branch": "ties",
+    "depth": 2,
+    "name": "2.3 Resource flows",
+    "description": "Money, staff, equipment, expertise and access moving between actors — grants from foundations to NGOs, public funding to media, pro-bono legal aid. Resource ties shape who can act.",
+    "sources": [
+      "civicus",
+      "ecnl"
+    ]
+  },
+  {
+    "id": "accountability_ties",
+    "parent": "ties",
+    "branch": "ties",
+    "depth": 2,
+    "name": "2.4 Accountability ties",
+    "description": "Relationships in which one actor must answer to another — government to parliament, public bodies to ombudspersons, platforms to regulators, leaders to voters. Accountability is the load-bearing tie of any democracy.",
+    "sources": [
+      "coe_venice",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "coordination_ties",
+    "parent": "ties",
+    "branch": "ties",
+    "depth": 2,
+    "name": "2.5 Coordination & coalition ties",
+    "description": "Working agreements between actors to align actions — joint campaigns, shared standards, multi-stakeholder coalitions. They turn dispersed effort into collective capacity.",
+    "sources": [
+      "ostrom",
+      "oecd_rdi"
+    ]
+  },
+  {
+    "id": "solidarity_ties",
+    "parent": "ties",
+    "branch": "ties",
+    "depth": 2,
+    "name": "2.6 Mentorship & solidarity ties",
+    "description": "Cross-border or cross-sector support — peer learning between civic organisations, legal aid to journalists under pressure, hosting threatened actors. They give the network depth and reach.",
+    "sources": [
+      "ecnl",
+      "civicus"
+    ]
+  },
+  {
+    "id": "adversarial_ties",
+    "parent": "ties",
+    "branch": "ties",
+    "depth": 2,
+    "name": "2.7 Adversarial ties",
+    "description": "Conflictual but legitimate relationships — opposition–government, watchdog–regulator, journalist–official. Democracy doesn't eliminate conflict; it channels it into rule-bound contest.",
+    "sources": [
+      "levitsky",
+      "diamond"
+    ]
+  },
+  {
+    "id": "structures",
+    "parent": "root",
+    "branch": "structures",
+    "depth": 1,
+    "name": "3. Network structures",
+    "description": "The shapes that ties form across many actors. Two networks with the same actors can have very different resilience depending on how they are wired together.",
+    "sources": [
+      "granovetter",
+      "castells",
+      "ostrom"
+    ]
+  },
+  {
+    "id": "density",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.1 Density",
+    "description": "How many of the possible ties between actors actually exist. Denser networks share information faster and respond together — but can also amplify shocks.",
+    "sources": [
+      "burt",
+      "granovetter"
+    ]
+  },
+  {
+    "id": "centralisation",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.2 Centralisation vs. decentralisation",
+    "description": "Whether the network depends on a few central hubs or distributes activity across many nodes. Highly centralised networks fail catastrophically when the hub is captured.",
+    "sources": [
+      "castells",
+      "ostrom"
+    ]
+  },
+  {
+    "id": "bridges",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.3 Bridges & structural holes",
+    "description": "Connections that span otherwise separate clusters — between cities and countryside, professions, or political camps. The gaps they span are ‘structural holes’; bridging them carries new information and prevents fragmentation.",
+    "sources": [
+      "burt",
+      "granovetter"
+    ]
+  },
+  {
+    "id": "clusters",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.4 Clusters & communities",
+    "description": "Tightly connected sub-groups within the larger network — issue communities, professional fields, local scenes. Clusters give depth and identity; they need bridges to stay healthy.",
+    "sources": [
+      "granovetter",
+      "burt"
+    ]
+  },
+  {
+    "id": "brokers",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.5 Brokers & boundary spanners",
+    "description": "Actors who sit between clusters and translate between them — civic leaders working with public officials, journalists with sources across the spectrum. Brokerage across structural holes is the network's connective tissue.",
+    "sources": [
+      "burt",
+      "ostrom"
+    ]
+  },
+  {
+    "id": "polycentricity",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.6 Polycentric governance",
+    "description": "Multiple, overlapping centres of decision-making that coordinate without being controlled from a single point. Polycentric systems handle complex problems and survive partial failure.",
+    "sources": [
+      "ostrom"
+    ]
+  },
+  {
+    "id": "redundancy_struct",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.7 Redundancy",
+    "description": "More than one actor able to perform a critical function — several courts, several outlets, several watchdogs. Redundancy is what makes a network shock-tolerant.",
+    "sources": [
+      "bruneau4r",
+      "ostrom"
+    ]
+  },
+  {
+    "id": "multiplexity",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.8 Multiplexity",
+    "description": "Actors connected by more than one kind of tie at once (e.g., colleague + friend + co-volunteer). Multiplex ties are stronger and survive single-channel disruption.",
+    "sources": [
+      "granovetter",
+      "castells"
+    ]
+  },
+  {
+    "id": "power_asymmetries",
+    "parent": "structures",
+    "branch": "structures",
+    "depth": 2,
+    "name": "3.9 Power asymmetries & dependency",
+    "description": "Unequal positions in the network: some actors control money, law, infrastructure, agenda access or coercive authority while others depend on them. Resilience analysis has to track these asymmetries, not only the existence of ties.",
+    "sources": [
+      "burt",
+      "vdem",
+      "bertelsmann"
+    ]
+  },
+  {
+    "id": "functions",
+    "parent": "root",
+    "branch": "functions",
+    "depth": 1,
+    "name": "4. Network functions",
+    "description": "What democratic networks actually do — beyond merely existing. Each function is something the network performs together that no actor can do alone.",
+    "sources": [
+      "benkler",
+      "oecd_rdi"
+    ]
+  },
+  {
+    "id": "sensing",
+    "parent": "functions",
+    "branch": "functions",
+    "depth": 2,
+    "name": "4.1 Sensing — early warning & monitoring",
+    "description": "Picking up signals of trouble before they become crises: backsliding, foreign interference, mass disinformation, attacks on civic actors. Sensing only works if information flows are open.",
+    "sources": [
+      "vdem",
+      "fh_fiw",
+      "civicus"
+    ]
+  },
+  {
+    "id": "early_warning",
+    "parent": "sensing",
+    "branch": "functions",
+    "depth": 3,
+    "name": "4.1.1 Early-warning systems",
+    "description": "Structured monitoring that flags emerging risks — declining indicators, sudden information operations, attacks on journalists. Used to trigger protective action.",
+    "sources": [
+      "vdem",
+      "civicus",
+      "eu_eeas"
+    ]
+  },
+  {
+    "id": "monitoring",
+    "parent": "sensing",
+    "branch": "functions",
+    "depth": 3,
+    "name": "4.1.2 Continuous monitoring",
+    "description": "Steady tracking of democratic indicators by independent organisations — V-Dem, Freedom House, CIVICUS Monitor, RSF. The baseline against which sudden change is detected.",
+    "sources": [
+      "vdem",
+      "fh_fiw",
+      "civicus",
+      "rsf"
+    ]
+  },
+  {
+    "id": "sensemaking",
+    "parent": "functions",
+    "branch": "functions",
+    "depth": 2,
+    "name": "4.2 Sensemaking",
+    "description": "Turning raw signals into a shared understanding of what is happening and why. Done well, it counters confusion and disinformation; done badly, it produces panics and conspiracy theories.",
+    "sources": [
+      "benkler",
+      "carnegie"
+    ]
+  },
+  {
+    "id": "deliberation",
+    "parent": "functions",
+    "branch": "functions",
+    "depth": 2,
+    "name": "4.3 Deliberation",
+    "description": "Structured exchange of arguments and evidence among citizens, experts and decision-makers. Citizens' assemblies, public consultations and quality journalism all do this.",
+    "sources": [
+      "oecd_rdi",
+      "oecd_og"
+    ]
+  },
+  {
+    "id": "mobilisation",
+    "parent": "functions",
+    "branch": "functions",
+    "depth": 2,
+    "name": "4.4 Mobilisation",
+    "description": "Bringing people into action — voting, volunteering, joining a campaign, attending a protest. Networks lower the cost of acting together.",
+    "sources": [
+      "benkler",
+      "castells",
+      "ecnl"
+    ]
+  },
+  {
+    "id": "mutual_aid",
+    "parent": "functions",
+    "branch": "functions",
+    "depth": 2,
+    "name": "4.5 Mutual aid & service delivery",
+    "description": "Citizens and civic organisations providing direct help — refugee support, disaster response, food aid. Mutual aid is both a democratic function and a tie-builder.",
+    "sources": [
+      "burt",
+      "civicus"
+    ]
+  },
+  {
+    "id": "oversight_fn",
+    "parent": "functions",
+    "branch": "functions",
+    "depth": 2,
+    "name": "4.6 Oversight & accountability work",
+    "description": "The day-to-day labour of holding power to account: investigations, audits, court cases, public records requests. Performed jointly by media, watchdogs and oversight bodies.",
+    "sources": [
+      "ogp",
+      "article19",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "renewal_fn",
+    "parent": "functions",
+    "branch": "functions",
+    "depth": 2,
+    "name": "4.7 Reform & renewal",
+    "description": "Changing institutions, rules and practices to fit new realities — electoral reform, anti-corruption packages, platform regulation. Networks design, push for and monitor these reforms.",
+    "sources": [
+      "oecd_rdi",
+      "carnegie"
+    ]
+  },
+  {
+    "id": "threats",
+    "parent": "root",
+    "branch": "threats",
+    "depth": 1,
+    "name": "5. Network threats",
+    "description": "The forces that weaken or break democratic networks — from information disorder to capture, foreign interference, polarisation and infrastructure attacks.",
+    "sources": [
+      "levitsky",
+      "vdem",
+      "ec_ddp"
+    ]
+  },
+  {
+    "id": "info_disorder",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.1 Information disorder",
+    "description": "The pollution of the public information environment with false, misleading or maliciously decontextualised content. It erodes the shared facts democracy needs to function.",
+    "sources": [
+      "ec_edap",
+      "eu_eeas",
+      "nato_stratcom"
+    ]
+  },
+  {
+    "id": "disinformation",
+    "parent": "info_disorder",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.1.1 Disinformation",
+    "description": "False or misleading information created and spread deliberately, often with political or financial motive. The intent is to deceive.",
+    "sources": [
+      "ec_edap",
+      "eu_eeas"
+    ]
+  },
+  {
+    "id": "misinformation",
+    "parent": "info_disorder",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.1.2 Misinformation",
+    "description": "False or misleading information shared without intent to deceive — usually by people who believe it. Still damaging at scale.",
+    "sources": [
+      "ec_edap"
+    ]
+  },
+  {
+    "id": "malinformation",
+    "parent": "info_disorder",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.1.3 Malinformation",
+    "description": "Genuine information shared maliciously, out of context, or in violation of privacy — to harm a person, group or institution.",
+    "sources": [
+      "ec_edap"
+    ]
+  },
+  {
+    "id": "capture",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.2 State & media capture",
+    "description": "Quiet takeover of public institutions, regulators or major outlets by narrow private or political interests. Capture leaves the formal structures intact while hollowing out their independence.",
+    "sources": [
+      "ec_rol",
+      "fh_fiw",
+      "levitsky"
+    ]
+  },
+  {
+    "id": "authoritarian_playbook",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.3 The authoritarian playbook",
+    "description": "A recognisable pattern of moves used to dismantle democracies from within — executive aggrandisement, judicial capture, restrictions on NGOs and media, weaponised legality.",
+    "sources": [
+      "levitsky",
+      "diamond",
+      "vdem"
+    ]
+  },
+  {
+    "id": "exec_aggrandisement",
+    "parent": "authoritarian_playbook",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.3.1 Executive aggrandisement",
+    "description": "Gradual concentration of power in the executive at the expense of parliaments, courts and oversight bodies — often through legal but corrosive steps.",
+    "sources": [
+      "levitsky",
+      "vdem"
+    ]
+  },
+  {
+    "id": "judicial_capture",
+    "parent": "authoritarian_playbook",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.3.2 Judicial capture",
+    "description": "Re-shaping courts and prosecutors to serve incumbents — through appointments, disciplinary regimes, restructuring and intimidation.",
+    "sources": [
+      "coe_venice",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "ngo_restrictions",
+    "parent": "authoritarian_playbook",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.3.3 Restrictions on NGOs & assembly",
+    "description": "'Foreign agent' labels, burdensome registration, defunding, harassment of protests — designed to choke off the civic layer of the network.",
+    "sources": [
+      "ecnl",
+      "civicus",
+      "article19"
+    ]
+  },
+  {
+    "id": "foreign_interference",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.4 Foreign interference & hybrid threats",
+    "description": "Coordinated actions by foreign states to manipulate political life — disinformation, covert funding, cyber operations, infrastructure pressure. Often combined into 'hybrid' campaigns.",
+    "sources": [
+      "ec_ddp",
+      "eu_eeas",
+      "nato_stratcom"
+    ]
+  },
+  {
+    "id": "fimi",
+    "parent": "foreign_interference",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.4.1 Foreign Information Manipulation & Interference (FIMI)",
+    "description": "The EU term for coordinated, often covert manipulation of the information environment by foreign actors, including via proxies and inauthentic networks.",
+    "sources": [
+      "ec_ddp",
+      "eu_eeas"
+    ]
+  },
+  {
+    "id": "hybrid_threats",
+    "parent": "foreign_interference",
+    "branch": "threats",
+    "depth": 3,
+    "name": "5.4.2 Hybrid threats",
+    "description": "Combinations of diplomatic pressure, cyber operations, economic coercion, energy weaponisation and information operations — designed to stay below the threshold of open conflict.",
+    "sources": [
+      "ec_ddp",
+      "nato_stratcom"
+    ]
+  },
+  {
+    "id": "polarisation",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.5 Polarisation & affective hostility",
+    "description": "A shift from disagreement over policy to mutual loathing of fellow citizens. Polarisation breaks the bridges in the network and makes everything else harder.",
+    "sources": [
+      "carnegie",
+      "diamond"
+    ]
+  },
+  {
+    "id": "surveillance",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.6 Surveillance & chilling effects",
+    "description": "Mass or targeted monitoring of citizens, activists and journalists — by states or private actors. Even the suspicion of being watched silences participation.",
+    "sources": [
+      "fh_fotn",
+      "article19",
+      "gdpr"
+    ]
+  },
+  {
+    "id": "slapps",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.7 SLAPPs & legal harassment",
+    "description": "Strategic Lawsuits Against Public Participation — abusive legal actions used to silence journalists, NGOs and activists by drowning them in costs and proceedings.",
+    "sources": [
+      "ec_slapp",
+      "article19"
+    ]
+  },
+  {
+    "id": "platform_manipulation",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.8 Platform manipulation & algorithmic harm",
+    "description": "Inauthentic accounts, coordinated amplification, opaque recommender systems and ad-targeting that distort political communication. Risks now framed by EU law (DSA, AI Act).",
+    "sources": [
+      "ec_dsa",
+      "ec_edap",
+      "fh_fotn"
+    ]
+  },
+  {
+    "id": "infra_attacks",
+    "parent": "threats",
+    "branch": "threats",
+    "depth": 2,
+    "name": "5.9 Cyber & infrastructure attacks",
+    "description": "Attacks on electoral systems, hospitals, energy, telecoms and government services. They threaten democratic life by disrupting the basic services that legitimate the state.",
+    "sources": [
+      "ec_ddp"
+    ]
+  },
+  {
+    "id": "capabilities",
+    "parent": "root",
+    "branch": "capabilities",
+    "depth": 1,
+    "name": "6. Resilience capabilities",
+    "description": "The properties that let a democratic network absorb shocks, keep functioning, adapt to new pressures and renew itself. Drawn from resilience research (Bruneau et al.'s 4 R's, plus learning and civic capacity).",
+    "sources": [
+      "bruneau4r",
+      "ostrom",
+      "diamond"
+    ]
+  },
+  {
+    "id": "robustness",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.1 Robustness",
+    "description": "The ability to withstand stress without losing core function — courts that keep ruling under pressure, media that keep publishing, watchdogs that keep watching.",
+    "sources": [
+      "bruneau4r",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "redundancy_cap",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.2 Redundancy",
+    "description": "Backup capacity in critical functions — multiple courts, multiple outlets, multiple oversight paths — so that no single failure topples the system.",
+    "sources": [
+      "bruneau4r",
+      "ostrom"
+    ]
+  },
+  {
+    "id": "resourcefulness",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.3 Resourcefulness",
+    "description": "The ability to mobilise people, money, expertise and tools when needed — including by reconfiguring existing relationships under pressure.",
+    "sources": [
+      "bruneau4r",
+      "civicus"
+    ]
+  },
+  {
+    "id": "rapidity",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.4 Rapidity",
+    "description": "Speed of response — how quickly the network can detect, decide and act before damage compounds. Especially critical against disinformation and crises.",
+    "sources": [
+      "bruneau4r",
+      "eu_eeas"
+    ]
+  },
+  {
+    "id": "adaptive_capacity",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.5 Adaptive capacity",
+    "description": "Capacity to adjust rules, structures and practices in response to new realities without losing democratic character.",
+    "sources": [
+      "ostrom",
+      "oecd_rdi"
+    ]
+  },
+  {
+    "id": "transformative_capacity",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.6 Transformative capacity",
+    "description": "Capacity to reshape underlying rules and relationships when adaptation is no longer enough — reform of constitutions, electoral systems, or media regulation.",
+    "sources": [
+      "diamond",
+      "oecd_rdi"
+    ]
+  },
+  {
+    "id": "learning",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.7 Learning & memory",
+    "description": "Mechanisms for remembering what worked, what failed and why — archives, after-action reviews, comparative research. Networks without memory repeat mistakes.",
+    "sources": [
+      "vdem",
+      "carnegie"
+    ]
+  },
+  {
+    "id": "civic_literacy",
+    "parent": "capabilities",
+    "branch": "capabilities",
+    "depth": 2,
+    "name": "6.8 Civic & media literacy",
+    "description": "Citizens' ability to understand democratic institutions, evaluate information, and participate. The most upstream defence against information disorder.",
+    "sources": [
+      "ec_edap",
+      "oecd_rdi"
+    ]
+  },
+  {
+    "id": "rules",
+    "parent": "root",
+    "branch": "rules",
+    "depth": 1,
+    "name": "7. Enabling rules & governance",
+    "description": "The legal and institutional scaffolding that lets democratic networks exist, act safely and hold power to account.",
+    "sources": [
+      "coe_venice",
+      "ec_ddp",
+      "ec_rol",
+      "bertelsmann"
+    ]
+  },
+  {
+    "id": "constitutional",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.1 Constitutional safeguards",
+    "description": "The hard-to-change rules that constrain majorities — separation of powers, fundamental rights, supermajority requirements. The bedrock of every other safeguard.",
+    "sources": [
+      "coe_venice",
+      "levitsky"
+    ]
+  },
+  {
+    "id": "electoral_integrity",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.2 Electoral integrity",
+    "description": "Free, fair, transparent elections — clean rolls, equal media access, secure ballots, credible counting, independent observation. The basic legitimacy contract.",
+    "sources": [
+      "osce_odihr",
+      "ifes",
+      "idea_gsod"
+    ]
+  },
+  {
+    "id": "rule_of_law",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.3 Rule of law",
+    "description": "Laws that are clear, public, stable, applied equally and enforced by an independent judiciary. Without it, every other right is conditional.",
+    "sources": [
+      "coe_venice",
+      "ec_rol"
+    ]
+  },
+  {
+    "id": "civic_space",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.4 Civic space & freedoms",
+    "description": "The legal and practical space in which citizens can organise, speak and assemble without fear. The oxygen of the network.",
+    "sources": [
+      "ecnl",
+      "civicus",
+      "article19"
+    ]
+  },
+  {
+    "id": "assembly",
+    "parent": "civic_space",
+    "branch": "rules",
+    "depth": 3,
+    "name": "7.4.1 Freedom of peaceful assembly",
+    "description": "The right to gather peacefully in public to express views — protected by international human-rights law and chilled by excessive policing, permits and surveillance.",
+    "sources": [
+      "article19",
+      "ecnl"
+    ]
+  },
+  {
+    "id": "association",
+    "parent": "civic_space",
+    "branch": "rules",
+    "depth": 3,
+    "name": "7.4.2 Freedom of association",
+    "description": "The right to form, join and run organisations — NGOs, unions, political parties — without arbitrary state interference.",
+    "sources": [
+      "ecnl",
+      "civicus"
+    ]
+  },
+  {
+    "id": "expression",
+    "parent": "civic_space",
+    "branch": "rules",
+    "depth": 3,
+    "name": "7.4.3 Freedom of expression",
+    "description": "The right to seek, receive and impart information and ideas — including critical, dissenting and unpopular ones — within narrowly defined limits.",
+    "sources": [
+      "article19",
+      "ec_emfa"
+    ]
+  },
+  {
+    "id": "media_freedom",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.5 Media freedom & pluralism",
+    "description": "Legal and structural conditions that allow independent journalism to exist and compete — including ownership transparency, public-service media independence, journalist safety.",
+    "sources": [
+      "ec_emfa",
+      "rsf",
+      "article19"
+    ]
+  },
+  {
+    "id": "data_protection",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.6 Data protection & privacy",
+    "description": "Rules limiting how personal data is collected, used and shared — the floor under which surveillance and manipulation become unlawful.",
+    "sources": [
+      "gdpr",
+      "fh_fotn"
+    ]
+  },
+  {
+    "id": "platform_reg",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.7 Platform regulation",
+    "description": "Rules that govern how online platforms operate, moderate content, design recommender systems, and share data with researchers and regulators.",
+    "sources": [
+      "ec_dsa",
+      "ec_dma"
+    ]
+  },
+  {
+    "id": "dsa",
+    "parent": "platform_reg",
+    "branch": "rules",
+    "depth": 3,
+    "name": "7.7.1 Digital Services Act (DSA)",
+    "description": "EU regulation imposing transparency, risk-assessment and accountability obligations on online platforms — with the heaviest duties on very large platforms and search engines.",
+    "sources": [
+      "ec_dsa"
+    ]
+  },
+  {
+    "id": "dma",
+    "parent": "platform_reg",
+    "branch": "rules",
+    "depth": 3,
+    "name": "7.7.2 Digital Markets Act (DMA)",
+    "description": "EU regulation targeting 'gatekeeper' platforms to keep digital markets contestable — a structural condition for plural information ecosystems.",
+    "sources": [
+      "ec_dma"
+    ]
+  },
+  {
+    "id": "open_gov",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.8 Open government & transparency",
+    "description": "Access to public information, open data, public registers of beneficial owners and lobbying — turning the state into a glass house citizens can inspect.",
+    "sources": [
+      "ogp",
+      "oecd_og"
+    ]
+  },
+  {
+    "id": "anticorruption",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.9 Anti-corruption framework",
+    "description": "Conflict-of-interest rules, asset declarations, procurement integrity, independent prosecutors. Corruption is a tie eroding all the others.",
+    "sources": [
+      "ec_rol",
+      "ogp"
+    ]
+  },
+  {
+    "id": "counter_fi",
+    "parent": "rules",
+    "branch": "rules",
+    "depth": 2,
+    "name": "7.10 Counter-interference framework",
+    "description": "Laws and institutions to detect, expose and sanction foreign interference — transparency of political funding, sanctions, FIMI taskforces, infrastructure-security duties.",
+    "sources": [
+      "ec_ddp",
+      "eu_eeas",
+      "nato_stratcom"
+    ]
+  },
+  {
+    "id": "outcomes",
+    "parent": "root",
+    "branch": "outcomes",
+    "depth": 1,
+    "name": "8. Democratic outcomes",
+    "description": "The goods a networked, resilient democracy is supposed to produce. They are the test of whether the rest is working.",
+    "sources": [
+      "idea_gsod",
+      "oecd_trust",
+      "vdem",
+      "scharpf",
+      "schmidt",
+      "bertelsmann"
+    ]
+  },
+  {
+    "id": "trust_outcome",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.1 Public trust",
+    "description": "Citizens' justified confidence that institutions are competent, fair and listening — and that fellow citizens act in good faith. Trust is both an outcome and a precondition.",
+    "sources": [
+      "oecd_trust",
+      "edelman",
+      "burt"
+    ]
+  },
+  {
+    "id": "participation",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.2 Inclusive participation",
+    "description": "All citizens — across regions, classes, genders, ages and origins — have real, not just formal, opportunities to take part in political life.",
+    "sources": [
+      "idea_gsod",
+      "undp_dg"
+    ]
+  },
+  {
+    "id": "quality_deliberation",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.3 Quality deliberation",
+    "description": "Public debate based on evidence, mutual respect and a shared (if contested) set of facts. The aim is not consensus but informed disagreement.",
+    "sources": [
+      "oecd_rdi",
+      "benkler"
+    ]
+  },
+  {
+    "id": "responsiveness",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.4 Responsive policy",
+    "description": "Government decisions that track what citizens actually want and need — across cycles and beyond the loudest voices.",
+    "sources": [
+      "oecd_rdi",
+      "undp_dg",
+      "scharpf",
+      "schmidt"
+    ]
+  },
+  {
+    "id": "accountability_outcome",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.5 Accountability in practice",
+    "description": "Power-holders face real consequences for wrongdoing — through elections, courts, oversight bodies, the press and civic pressure.",
+    "sources": [
+      "coe_venice",
+      "ec_rol",
+      "ogp",
+      "bertelsmann"
+    ]
+  },
+  {
+    "id": "cohesion",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.6 Social cohesion",
+    "description": "Different groups in society see each other as fellow citizens despite disagreement — a precondition for de-escalation, compromise and reform.",
+    "sources": [
+      "burt",
+      "carnegie"
+    ]
+  },
+  {
+    "id": "equitable_security",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.7 Equitable security",
+    "description": "Safety from violence, intimidation and arbitrary power — distributed fairly, not concentrated in those already powerful.",
+    "sources": [
+      "undp_dg",
+      "article19"
+    ]
+  },
+  {
+    "id": "renewal_outcome",
+    "parent": "outcomes",
+    "branch": "outcomes",
+    "depth": 2,
+    "name": "8.8 Democratic renewal",
+    "description": "The capacity of democracies not just to survive but to improve — extending rights, repairing institutions, integrating new generations and new technologies.",
+    "sources": [
+      "diamond",
+      "oecd_rdi",
+      "carnegie"
+    ]
+  }
+];
+
+/* Curated cross-branch relations (in addition to parent-child).
+   These are conceptual mappings proposed by the authors and should be treated as analytical hypotheses. */
+const RELATIONS = [
+  {
+    "s": "info_disorder",
+    "p": "undermines",
+    "t": "trust_outcome"
+  },
+  {
+    "s": "info_disorder",
+    "p": "undermines",
+    "t": "quality_deliberation"
+  },
+  {
+    "s": "electoral_integrity",
+    "p": "enables",
+    "t": "participation"
+  },
+  {
+    "s": "watchdogs",
+    "p": "produces",
+    "t": "accountability_outcome"
+  },
+  {
+    "s": "dsa",
+    "p": "counters",
+    "t": "platform_manipulation"
+  },
+  {
+    "s": "civic_space",
+    "p": "enables",
+    "t": "mobilisation"
+  },
+  {
+    "s": "bridges",
+    "p": "enables",
+    "t": "cohesion"
+  },
+  {
+    "s": "polycentricity",
+    "p": "produces",
+    "t": "robustness"
+  },
+  {
+    "s": "public_media",
+    "p": "produces",
+    "t": "quality_deliberation"
+  },
+  {
+    "s": "foreign_interference",
+    "p": "exploits",
+    "t": "polarisation"
+  },
+  {
+    "s": "judicial_capture",
+    "p": "erodes",
+    "t": "rule_of_law"
+  },
+  {
+    "s": "ngo_restrictions",
+    "p": "erodes",
+    "t": "civic_space"
+  },
+  {
+    "s": "surveillance",
+    "p": "chills",
+    "t": "assembly"
+  },
+  {
+    "s": "counter_fi",
+    "p": "counters",
+    "t": "foreign_interference"
+  },
+  {
+    "s": "adaptive_capacity",
+    "p": "enables",
+    "t": "renewal_outcome"
+  },
+  {
+    "s": "learning",
+    "p": "produces",
+    "t": "adaptive_capacity"
+  },
+  {
+    "s": "trust_ties",
+    "p": "enables",
+    "t": "coordination_ties"
+  },
+  {
+    "s": "info_flows",
+    "p": "enables",
+    "t": "sensemaking"
+  },
+  {
+    "s": "accountability_ties",
+    "p": "produces",
+    "t": "accountability_outcome"
+  },
+  {
+    "s": "brokers",
+    "p": "enables",
+    "t": "coordination_ties"
+  },
+  {
+    "s": "redundancy_struct",
+    "p": "produces",
+    "t": "robustness"
+  },
+  {
+    "s": "civic_literacy",
+    "p": "counters",
+    "t": "info_disorder"
+  },
+  {
+    "s": "slapps",
+    "p": "chills",
+    "t": "expression"
+  },
+  {
+    "s": "responsible_business",
+    "p": "produces",
+    "t": "trust_outcome"
+  },
+  {
+    "s": "data_protection",
+    "p": "limits",
+    "t": "surveillance"
+  },
+  {
+    "s": "open_gov",
+    "p": "enables",
+    "t": "oversight_fn"
+  },
+  {
+    "s": "independent_media",
+    "p": "performs",
+    "t": "oversight_fn"
+  },
+  {
+    "s": "academia",
+    "p": "produces",
+    "t": "learning"
+  },
+  {
+    "s": "diaspora",
+    "p": "strengthens",
+    "t": "resource_flows"
+  },
+  {
+    "s": "political_parties",
+    "p": "enables",
+    "t": "participation"
+  },
+  {
+    "s": "electoral_campaigns",
+    "p": "performs",
+    "t": "mobilisation"
+  },
+  {
+    "s": "trade_unions",
+    "p": "strengthens",
+    "t": "resource_flows"
+  },
+  {
+    "s": "professional_associations",
+    "p": "produces",
+    "t": "learning"
+  },
+  {
+    "s": "religious_community_orgs",
+    "p": "strengthens",
+    "t": "cohesion"
+  },
+  {
+    "s": "local_deliberative_bodies",
+    "p": "performs",
+    "t": "deliberation"
+  },
+  {
+    "s": "patronage_clientelism",
+    "p": "erodes",
+    "t": "accountability_outcome"
+  },
+  {
+    "s": "capture",
+    "p": "exploits",
+    "t": "power_asymmetries"
+  },
+  {
+    "s": "power_asymmetries",
+    "p": "enables",
+    "t": "capture"
+  },
+  {
+    "s": "fact_checkers",
+    "p": "counters",
+    "t": "disinformation"
+  }
+];
+
+/* ============================================================
+   STATE & UTIL
+   ============================================================ */
+const ROOT = { id:"root", name:"Networked Democratic Resilience",
+  description:"The plain-language root of this ontology: the ability of citizens, civil society, public institutions, independent media, researchers and responsible businesses to stay connected, share trustworthy information, coordinate, hold power to account, and renew democratic life — even under stress." };
+
+const NODE_BY_ID = {};
+NODE_BY_ID[ROOT.id] = ROOT;
+NODES.forEach(n => { NODE_BY_ID[n.id] = n; });
+
+const CHILDREN = {};
+NODES.forEach(n => {
+  if (!CHILDREN[n.parent]) CHILDREN[n.parent] = [];
+  CHILDREN[n.parent].push(n);
+});
+
+let currentId = "root";
+let activeBranch = null; // null = all
+let expanded = new Set(["root", ...Object.keys(BRANCHES)]); // expand root + branches by default
+
+/* ============================================================
+   HEADER STATS + PILLARS + SOURCE COUNT
+   ============================================================ */
+document.getElementById("stNodes").textContent = NODES.length;
+document.getElementById("stBranches").textContent = Object.keys(BRANCHES).length;
+document.getElementById("stRels").textContent = RELATIONS.length + NODES.length; // cross-rel + parent-child
+document.getElementById("stSources").textContent = Object.keys(SOURCES).length;
+
+function pillarEl(key){
+  const b = BRANCHES[key];
+  const el = document.createElement("button");
+  el.type = "button";
+  el.className = "pillar";
+  el.innerHTML = `
+    <div class="row">
+      <span class="dot" style="background:${b.color}"></span>
+      <span class="num">Branch ${b.short}</span>
+    </div>
+    <h4>${b.name.replace(/^\d+\.\s*/,"")}</h4>
+    <p>${b.blurb}</p>
+  `;
+  el.onclick = () => { setActiveBranch(key); selectNode(key); switchView("viewExplorer"); };
+  return el;
+}
+
+(function renderPhaseGroups(){
+  const host = document.getElementById("pillarGroups");
+  host.innerHTML = "";
+
+  // Input → Throughput → Output flow
+  const flow = document.createElement("div");
+  flow.className = "phase-flow";
+  ["input", "throughput", "output"].forEach((pk, idx) => {
+    const p = PHASES[pk];
+    const col = document.createElement("div");
+    col.className = "phase-col";
+    col.style.setProperty("--pc", p.color);
+    col.innerHTML = `
+      <div class="phase-head"><span class="phase-name">${p.name}</span></div>
+      <div class="phase-blurb">${p.blurb}</div>
+      <div class="phase-pillars"></div>`;
+    const pp = col.querySelector(".phase-pillars");
+    p.branches.forEach(bk => pp.appendChild(pillarEl(bk)));
+    flow.appendChild(col);
+    if (idx < 2){
+      const ar = document.createElement("div");
+      ar.className = "phase-arrow";
+      ar.textContent = "→";
+      flow.appendChild(ar);
+    }
+  });
+  host.appendChild(flow);
+
+  // Stressors strip (threats — cross-cutting)
+  const sp = PHASES.stressor;
+  const strip = document.createElement("div");
+  strip.className = "phase-strip";
+  strip.style.setProperty("--pc", sp.color);
+  strip.innerHTML = `
+    <div class="phase-head"><span class="phase-name">${sp.name}</span></div>
+    <div class="phase-blurb">${sp.blurb}</div>
+    <div class="phase-pillars" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px"></div>`;
+  const spp = strip.querySelector(".phase-pillars");
+  sp.branches.forEach(bk => spp.appendChild(pillarEl(bk)));
+  host.appendChild(strip);
+})();
+
+/* ============================================================
+   TAB SWITCHER
+   ============================================================ */
+function switchView(viewId){
+  document.querySelectorAll(".tab").forEach(t => {
+    const active = t.dataset.view === viewId;
+    t.classList.toggle("active", active);
+    t.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  document.querySelectorAll(".view").forEach(v => {
+    const active = v.id === viewId;
+    v.classList.toggle("active", active);
+    v.toggleAttribute("hidden", !active);
+  });
+  syncTopbarOffset();
+  if (viewId === "viewNetwork") drawNetwork();
+  if (viewId === "viewRadial") drawSunburst();
+  if (viewId === "viewSources") renderSources();
+  window.scrollTo({top:0, behavior:"instant"});
+}
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => switchView(t.dataset.view));
+document.getElementById("tabbar")?.addEventListener("keydown", (e) => {
+  const tabs = [...document.querySelectorAll(".tab")];
+  const current = tabs.indexOf(document.activeElement);
+  if (current < 0) return;
+  const dir = e.key === "ArrowRight" ? 1 : (e.key === "ArrowLeft" ? -1 : 0);
+  if (!dir) return;
+  e.preventDefault();
+  const next = tabs[(current + dir + tabs.length) % tabs.length];
+  next.focus();
+  switchView(next.dataset.view);
+});
+document.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => switchView(b.dataset.goto));
+
+function syncTopbarOffset(){
+  const topbar = document.querySelector("header.topbar");
+  if (!topbar) return;
+  document.documentElement.style.setProperty("--topbar-h", `${Math.ceil(topbar.getBoundingClientRect().height)}px`);
+}
+
+/* ============================================================
+   BRANCH PILLS
+   ============================================================ */
+(function renderBranchPills(){
+  const host = document.getElementById("branchPills");
+  const all = document.createElement("button");
+  all.type = "button";
+  all.className = "branch-pill active";
+  all.dataset.branch = "";
+  all.innerHTML = `<span class="d" style="background:var(--muted)"></span><span>All branches</span>`;
+  all.onclick = () => setActiveBranch(null);
+  host.appendChild(all);
+  Object.entries(BRANCHES).forEach(([k,b]) => {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "branch-pill";
+    el.dataset.branch = k;
+    el.innerHTML = `<span class="d" style="background:${b.color}"></span><span>${b.name.replace(/^\d+\.\s*/,"")}</span>`;
+    el.onclick = () => setActiveBranch(k);
+    host.appendChild(el);
+  });
+})();
+
+function setActiveBranch(branchKey){
+  activeBranch = branchKey;
+  document.querySelectorAll(".branch-pill").forEach(p => {
+    p.classList.toggle("active", (p.dataset.branch || "") === (branchKey || ""));
+  });
+  renderTree();
+}
+
+/* ============================================================
+   TREE
+   ============================================================ */
+function renderTree(){
+  const host = document.getElementById("tree");
+  host.innerHTML = "";
+  // Root row
+  host.appendChild(renderNodeRow(ROOT, 0, true));
+  // Branches
+  const branchNodes = NODES.filter(n => n.depth === 1);
+  const ul = document.createElement("div");
+  ul.className = "children";
+  branchNodes.forEach(b => {
+    if (activeBranch && b.id !== activeBranch) return;
+    ul.appendChild(renderSubtree(b));
+  });
+  host.appendChild(ul);
+}
+
+function renderSubtree(node){
+  const wrap = document.createElement("div");
+  const kids = (CHILDREN[node.id] || []).filter(c => !activeBranch || c.branch === activeBranch);
+  const hasKids = kids.length > 0;
+  wrap.appendChild(renderNodeRow(node, kids.length, hasKids));
+  if (hasKids && expanded.has(node.id)){
+    const ul = document.createElement("div");
+    ul.className = "children";
+    kids.forEach(k => ul.appendChild(renderSubtree(k)));
+    wrap.appendChild(ul);
+  }
+  return wrap;
+}
+
+function renderNodeRow(node, childCount, hasKids){
+  const row = document.createElement("div");
+  row.className = "row" + (node.id === currentId ? " selected" : "");
+  const branch = BRANCHES[node.branch];
+  const color = branch ? branch.color : "var(--muted)";
+  const toggle = hasKids ? (expanded.has(node.id) ? "▾" : "▸") : "";
+  row.innerHTML = `
+    <button class="toggle" type="button" ${hasKids ? `aria-label="${expanded.has(node.id) ? "Collapse" : "Expand"} ${escapeHtml(node.name)}"` : "disabled aria-hidden=\"true\""}>${toggle}</button>
+    <button class="label" type="button" aria-current="${node.id === currentId ? "true" : "false"}">
+      <span style="color:${color};font-weight:700;margin-right:6px">●</span>${escapeHtml(node.name)}
+      ${childCount ? `<span class="badge">${childCount}</span>` : ""}
+    </button>
+  `;
+  row.querySelector(".toggle").onclick = (e) => {
+    e.stopPropagation();
+    if (!hasKids) return;
+    if (expanded.has(node.id)) expanded.delete(node.id); else expanded.add(node.id);
+    renderTree();
+  };
+  row.querySelector(".label").onclick = () => selectNode(node.id);
+  return row;
+}
+
+/* ============================================================
+   DETAIL
+   ============================================================ */
+function selectNode(id, opts = {}){
+  currentId = id;
+  // Make sure ancestors are expanded
+  let n = NODE_BY_ID[id];
+  while (n && n.parent){
+    expanded.add(n.parent);
+    n = NODE_BY_ID[n.parent];
+  }
+  renderTree();
+  renderDetail();
+  if (opts.switchToExplorer !== false && document.getElementById("viewExplorer").classList.contains("active") === false) {
+    switchView("viewExplorer");
+  }
+}
+
+function renderDetail(){
+  const host = document.getElementById("detail");
+  const node = NODE_BY_ID[currentId];
+  if (!node){ host.innerHTML = "<div class='breadcrumb'>Not found.</div>"; return; }
+
+  const branch = BRANCHES[node.branch];
+  const phase = branch ? phaseForBranch(node.branch) : null;
+  const crumb = buildBreadcrumb(node);
+  const kids = CHILDREN[node.id] || [];
+  const parentNode = node.parent && NODE_BY_ID[node.parent];
+  const inbound = RELATIONS.filter(r => r.t === node.id);
+  const outbound = RELATIONS.filter(r => r.s === node.id);
+  const srcs = (node.sources || []).map(sid => ({ id: sid, src: SOURCES[sid] })).filter(s => s.src);
+
+  host.innerHTML = `
+    <div class="breadcrumb">${crumb}</div>
+    <h2>${node.name}</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+      ${branch ? `<span class="branch-tag" style="margin:0;background:${hexA(branch.color,.18)};color:${branch.color};border:1px solid ${hexA(branch.color,.5)}">${branch.name}</span>` : ""}
+      ${phase ? `<span class="branch-tag" style="margin:0;background:${hexA(phase.color,.16)};color:${phase.color};border:1px solid ${hexA(phase.color,.5)}" title="Input → Throughput → Output framework">⟳ ${phase.name}</span>` : ""}
+    </div>
+    <div class="desc">${escapeHtml(node.description || "")}</div>
+
+    ${node.examples && node.examples.length ? `
+      <div class="section">
+        <h3>Examples</h3>
+        <div class="ex-list">
+          ${node.examples.map(e => `<div class="ex">${escapeHtml(e)}</div>`).join("")}
+        </div>
+      </div>` : ""}
+
+    ${kids.length ? `
+      <div class="section">
+        <h3>Sub-concepts (${kids.length})</h3>
+        <div class="rel-list">
+          ${kids.map(k => `<div class="rel"><span class="label-tag">contains</span><a data-go="${k.id}">${escapeHtml(k.name)}</a></div>`).join("")}
+        </div>
+      </div>` : ""}
+
+    ${parentNode ? `
+      <div class="section">
+        <h3>Parent concept</h3>
+        <div class="rel-list">
+          <div class="rel"><span class="label-tag">part of</span><a data-go="${parentNode.id}">${escapeHtml(parentNode.name)}</a></div>
+        </div>
+      </div>` : ""}
+
+    ${(outbound.length || inbound.length) ? `
+      <div class="section">
+        <h3>Related concepts</h3>
+        <div class="rel-list">
+          ${outbound.map(r => {
+            const tgt = NODE_BY_ID[r.t]; return tgt ?
+              `<div class="rel"><span class="label-tag">${r.p}</span><a data-go="${tgt.id}">${escapeHtml(tgt.name)}</a></div>` : "";
+          }).join("")}
+          ${inbound.map(r => {
+            const src = NODE_BY_ID[r.s]; return src ?
+              `<div class="rel"><span class="label-tag" style="color:#80588f;border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.1)">${r.p} ← from</span><a data-go="${src.id}">${escapeHtml(src.name)}</a></div>` : "";
+          }).join("")}
+        </div>
+      </div>` : ""}
+
+    ${srcs.length ? `
+      <div class="section">
+        <h3>Sources (${srcs.length})</h3>
+        <div class="src-list">
+          ${srcs.map(s => `
+            <div class="src">
+              <div class="t">${escapeHtml(s.src.title)}</div>
+              <div class="o"><span class="pill">${escapeHtml(s.src.type)}</span>${escapeHtml(s.src.org)} · ${s.src.year}</div>
+              <a href="${safeExternalUrl(s.src.url)}" target="_blank" rel="noopener">${escapeHtml(s.src.url)}</a>
+            </div>
+          `).join("")}
+        </div>
+      </div>` : ""}
+  `;
+  host.querySelectorAll("[data-go]").forEach(a => a.onclick = () => selectNode(a.dataset.go));
+}
+
+function buildBreadcrumb(node){
+  const chain = [];
+  let cur = node;
+  while (cur){
+    chain.unshift(cur);
+    cur = cur.parent ? NODE_BY_ID[cur.parent] : null;
+  }
+  return chain.map((n,i) => {
+    const isLast = i === chain.length-1;
+    return isLast ? `<b style="color:var(--text)">${escapeHtml(n.name)}</b>` :
+      `<span data-go="${n.id}">${escapeHtml(n.name)}</span>`;
+  }).join(' <span style="color:var(--muted2)">›</span> ');
+}
+
+// breadcrumb click delegation
+document.addEventListener("click", (e) => {
+  const el = e.target.closest(".breadcrumb [data-go]");
+  if (el){ selectNode(el.dataset.go); }
+});
+
+function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function safeExternalUrl(url){
+  try {
+    const u = new URL(String(url || ""), window.location.href);
+    return (u.protocol === "https:" || u.protocol === "http:") ? escapeHtml(u.href) : "#";
+  } catch {
+    return "#";
+  }
+}
+function hexA(hex, a){
+  const m = /^#([0-9a-f]{6})$/i.exec(hex); if (!m) return hex;
+  const n = parseInt(m[1],16); const r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+const TIE_STYLE_GROUPS = {
+  hierarchy: { label:"Hierarchy", kinds:["contains"], color:"#8a7d6d", width:1.1, dash:"", note:"parent → child" },
+  enabling:  { label:"Enabling / producing", kinds:["enables","produces","strengthens"], color:"#2f7d52", width:1.7, dash:"", note:"supports a capability, flow or outcome" },
+  performing: { label:"Performing", kinds:["performs"], color:"#c98217", width:1.7, dash:"", note:"carries out a democratic function" },
+  countering: { label:"Countering", kinds:["counters"], color:"#2f6f73", width:1.7, dash:"4,3", note:"reduces or responds to a threat" },
+  damaging:  { label:"Damaging", kinds:["undermines","erodes"], color:"#b9443f", width:1.7, dash:"4,3", note:"weakens a democratic good" },
+  constraining: { label:"Constraining", kinds:["limits"], color:"#4d669a", width:1.7, dash:"6,3", note:"lawfully narrows or bounds a risk" },
+  exploiting: { label:"Exploiting / chilling", kinds:["exploits","chills"], color:"#80588f", width:1.7, dash:"2,3", note:"uses vulnerabilities or suppresses action" }
+};
+function tieStyle(kind){
+  const group = Object.values(TIE_STYLE_GROUPS).find(g => g.kinds.includes(kind));
+  return group || { label:"Curated relation", color:"#80588f", width:1.5, dash:"3,3", note:"author-proposed relation" };
+}
+function tieGroup(kind){
+  const entry = Object.entries(TIE_STYLE_GROUPS).find(([,g]) => g.kinds.includes(kind));
+  return entry ? entry[0] : "curated";
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+const qInput = document.getElementById("q");
+const hits = document.getElementById("searchHits");
+qInput.addEventListener("input", () => {
+  const q = qInput.value.trim().toLowerCase();
+  if (!q){ hits.classList.remove("show"); hits.innerHTML=""; return; }
+  const res = [];
+  for (const n of NODES){
+    const hay = (n.name + " " + (n.description||"")).toLowerCase();
+    if (hay.includes(q)) res.push(n);
+    if (res.length >= 25) break;
+  }
+  hits.innerHTML = res.map(n => {
+    const b = BRANCHES[n.branch];
+    return `<div class="hit" data-go="${n.id}"><span style="color:${b ? b.color : "var(--muted)"};font-weight:700">●</span> ${escapeHtml(n.name)} <span class="b">${b ? b.name.replace(/^\d+\.\s*/,"") : ""}</span></div>`;
+  }).join("") || `<div class="hit" style="color:var(--muted2)">No matches.</div>`;
+  hits.classList.add("show");
+});
+hits.addEventListener("click", (e) => {
+  const h = e.target.closest(".hit[data-go]");
+  if (h){ selectNode(h.dataset.go); qInput.value=""; hits.classList.remove("show"); }
+});
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".search")) hits.classList.remove("show");
+});
+
+/* ============================================================
+   SOURCES VIEW
+   ============================================================ */
+function sourceUsageIndex(){
+  const usage = {};
+  Object.keys(SOURCES).forEach(id => usage[id] = []);
+  NODES.forEach(n => (n.sources || []).forEach(srcId => {
+    if (!usage[srcId]) usage[srcId] = [];
+    usage[srcId].push(n);
+  }));
+  return usage;
+}
+function compactConceptLabel(name){
+  return String(name || "").replace(/^\d+(\.\d+)*\s*/,"");
+}
+let sourcesInitialized = false;
+function renderSources(){
+  if (sourcesInitialized) return;
+  sourcesInitialized = true;
+  const host = document.getElementById("srcGrid");
+  const qEl = document.getElementById("sourceSearch");
+  const typeEl = document.getElementById("sourceType");
+  const orgEl = document.getElementById("sourceOrg");
+  const yearMinEl = document.getElementById("sourceYearMin");
+  const yearMaxEl = document.getElementById("sourceYearMax");
+  const yearRangeLabel = document.getElementById("sourceYearRangeLabel");
+  const yearStartLabel = document.getElementById("sourceYearStart");
+  const yearEndLabel = document.getElementById("sourceYearEnd");
+  const histEl = document.getElementById("sourceYearHistogram");
+  const sortEl = document.getElementById("sourceSort");
+  const countEl = document.getElementById("sourceCount");
+  if (!host) return;
+  const usage = sourceUsageIndex();
+  const allYears = [...new Set(Object.values(SOURCES).map(s => Number(s.year)).filter(y => Number.isFinite(y)))].sort((a,b) => a-b);
+  const minYear = allYears.length ? allYears[0] : 1900;
+  const maxYear = allYears.length ? allYears[allYears.length - 1] : new Date().getFullYear();
+  const yearCounts = Object.values(SOURCES).reduce((acc, s) => {
+    const y = Number(s.year);
+    if (Number.isFinite(y)) acc[y] = (acc[y] || 0) + 1;
+    return acc;
+  }, {});
+  const maxCount = Math.max(1, ...Object.values(yearCounts));
+
+  function fillSelect(select, values, formatter = v => v){
+    if (!select || select.dataset.ready) return;
+    values.forEach(v => {
+      const opt = document.createElement("option");
+      opt.value = v;
+      opt.textContent = formatter(v);
+      select.appendChild(opt);
+    });
+    select.dataset.ready = "1";
+  }
+  fillSelect(typeEl, [...new Set(Object.values(SOURCES).map(s => s.type).filter(Boolean))].sort());
+  fillSelect(orgEl, [...new Set(Object.values(SOURCES).map(s => s.org).filter(Boolean))].sort());
+
+  function initTimeline(){
+    [yearMinEl, yearMaxEl].forEach(el => {
+      if (!el) return;
+      el.min = minYear;
+      el.max = maxYear;
+      el.step = 1;
+    });
+    if (yearMinEl) yearMinEl.value = minYear;
+    if (yearMaxEl) yearMaxEl.value = maxYear;
+    if (yearStartLabel) yearStartLabel.textContent = minYear;
+    if (yearEndLabel) yearEndLabel.textContent = maxYear;
+    if (histEl && !histEl.dataset.ready){
+      histEl.innerHTML = "";
+      for (let y = minYear; y <= maxYear; y++){
+        const count = yearCounts[y] || 0;
+        const bar = document.createElement("div");
+        bar.className = "hist-bar";
+        bar.dataset.year = y;
+        bar.title = `${y}: ${count} source${count === 1 ? "" : "s"}`;
+        bar.style.height = `${count ? Math.max(8, (count / maxCount) * 42) : 3}px`;
+        histEl.appendChild(bar);
+      }
+      histEl.dataset.ready = "1";
+    }
+  }
+  initTimeline();
+
+  function getYearRange(){
+    let from = Number(yearMinEl?.value || minYear);
+    let to = Number(yearMaxEl?.value || maxYear);
+    if (from > to) [from, to] = [to, from];
+    return { from, to };
+  }
+  function updateTimelineDisplay(){
+    const { from, to } = getYearRange();
+    if (yearRangeLabel) yearRangeLabel.textContent = `${from}–${to}`;
+    if (histEl){
+      histEl.querySelectorAll(".hist-bar").forEach(bar => {
+        const y = Number(bar.dataset.year);
+        const active = y >= from && y <= to;
+        bar.classList.toggle("active", active);
+        bar.classList.toggle("out", !active);
+      });
+    }
+  }
+
+  function draw(){
+    updateTimelineDisplay();
+    const q = (qEl?.value || "").trim().toLowerCase();
+    const type = typeEl?.value || "";
+    const org = orgEl?.value || "";
+    const { from, to } = getYearRange();
+    const sort = sortEl?.value || "usage";
+    let rows = Object.entries(SOURCES).map(([id, s]) => ({ id, ...s, concepts: usage[id] || [] }));
+    rows = rows.filter(s => {
+      const conceptText = s.concepts.map(c => `${c.name} ${c.description || ""}`).join(" ");
+      const text = `${s.org} ${s.title} ${s.type} ${s.year} ${s.url} ${conceptText}`;
+      const y = Number(s.year);
+      return (!q || text.toLowerCase().includes(q)) &&
+             (!type || s.type === type) &&
+             (!org || s.org === org) &&
+             (!Number.isFinite(y) || (y >= from && y <= to));
+    });
+    rows.sort((a,b) => {
+      if (sort === "year_desc") return (b.year || 0) - (a.year || 0) || a.org.localeCompare(b.org);
+      if (sort === "org") return a.org.localeCompare(b.org) || String(b.year).localeCompare(String(a.year));
+      if (sort === "type") return String(a.type).localeCompare(String(b.type)) || a.org.localeCompare(b.org);
+      return (b.concepts.length - a.concepts.length) || a.org.localeCompare(b.org);
+    });
+    host.innerHTML = "";
+    countEl && (countEl.textContent = `${rows.length} of ${Object.keys(SOURCES).length} sources shown`);
+    if (!rows.length){
+      host.innerHTML = `<div class="src-empty">No sources match the current filters. Try clearing the search or widening the publication period.</div>`;
+      return;
+    }
+    rows.forEach(s => {
+      const shownConcepts = s.concepts.slice(0, 8);
+      const el = document.createElement("div");
+      el.className = "src-card";
+      el.innerHTML = `
+        <div class="authors">${escapeHtml(s.org)}</div>
+        <div class="t">${escapeHtml(s.title)}</div>
+        <div class="meta"><span class="typ">${escapeHtml(s.type)}</span>${escapeHtml(s.year)}</div>
+        <div class="usage">Linked to ${s.concepts.length} concept${s.concepts.length === 1 ? "" : "s"}</div>
+        ${shownConcepts.length ? `<div class="concept-tags">${shownConcepts.map(c => `<button class="concept-tag" type="button" data-concept="${c.id}" title="Open ${escapeHtml(c.name)}">${escapeHtml(compactConceptLabel(c.name))}</button>`).join("")}${s.concepts.length > shownConcepts.length ? `<span class="concept-tag" title="More linked concepts">+${s.concepts.length - shownConcepts.length} more</span>` : ""}</div>` : ""}
+        <a href="${safeExternalUrl(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.url)}</a>
+      `;
+      host.appendChild(el);
+    });
+  }
+
+  [qEl, typeEl, orgEl, sortEl].forEach(el => el && el.addEventListener("input", draw));
+  function onTimelineInput(e){
+    if (yearMinEl && yearMaxEl){
+      let min = Number(yearMinEl.value);
+      let max = Number(yearMaxEl.value);
+      if (min > max){
+        if (e?.target === yearMinEl) yearMaxEl.value = min;
+        else yearMinEl.value = max;
+      }
+    }
+    draw();
+  }
+  [yearMinEl, yearMaxEl].forEach(el => el && el.addEventListener("input", onTimelineInput));
+  document.getElementById("sourceReset")?.addEventListener("click", () => {
+    [qEl, typeEl, orgEl].forEach(el => { if (el) el.value = ""; });
+    if (sortEl) sortEl.value = "usage";
+    if (yearMinEl) yearMinEl.value = minYear;
+    if (yearMaxEl) yearMaxEl.value = maxYear;
+    draw();
+  });
+  host.addEventListener("click", e => {
+    const btn = e.target.closest("[data-concept]");
+    if (!btn) return;
+    selectNode(btn.dataset.concept);
+    switchView("viewExplorer");
+  });
+  draw();
+}
+
+/* ============================================================
+   NETWORK VISUALIZATION (D3 force)
+   ============================================================ */
+let netDrawn = false;
+let netSim = null;
+
+function buildGraph(){
+  const nodes = NODES.map(n => ({
+    id: n.id, name: n.name, branch: n.branch, depth: n.depth,
+    desc: n.description, deg: 0
+  }));
+  // include root
+  nodes.unshift({ id:"root", name: ROOT.name, branch:"root", depth:0, desc: ROOT.description, deg:0 });
+  const links = [];
+  // parent-child
+  NODES.forEach(n => {
+    links.push({ source: n.parent, target: n.id, kind: "contains" });
+  });
+  // cross
+  RELATIONS.forEach(r => links.push({ source: r.s, target: r.t, kind: r.p }));
+  // degree
+  links.forEach(l => {
+    const s = nodes.find(n=>n.id===(l.source.id||l.source));
+    const t = nodes.find(n=>n.id===(l.target.id||l.target));
+    if (s) s.deg++; if (t) t.deg++;
+  });
+  return { nodes, links };
+}
+
+function drawNetwork(){
+  if (netDrawn) return;
+  const svgEl = document.getElementById("netSvg");
+  const host = document.getElementById("netHost");
+  const tooltip = document.getElementById("netTooltip");
+  if (typeof d3 === "undefined"){
+    drawNetworkLocalFallback();
+    return;
+  }
+  netDrawn = true;
+  const W = host.clientWidth, H = host.clientHeight;
+
+  const { nodes, links } = buildGraph();
+  const branchMuted = new Set();
+  const tieMuted = new Set();
+
+  function nodeRadius(d){ return d.id === "root" ? 14 : 5 + Math.min(10, d.deg * 0.7); }
+  function normId(x){ return typeof x === "object" ? x.id : x; }
+  function linkGroup(d){ return tieGroup(d.kind); }
+  function branchVisible(d){ return d.id === "root" || !branchMuted.has(d.branch); }
+  function linkVisible(d){
+    const s = typeof d.source === "object" ? d.source : null;
+    const t = typeof d.target === "object" ? d.target : null;
+    return !tieMuted.has(linkGroup(d)) &&
+      (!s || branchVisible(s)) &&
+      (!t || branchVisible(t));
+  }
+
+  const svg = d3.select(svgEl);
+  svg.attr("viewBox", `0 0 ${W} ${H}`).attr("preserveAspectRatio","xMidYMid meet");
+  svg.selectAll("*").remove();
+
+  const defs = svg.append("defs");
+  Object.entries(TIE_STYLE_GROUPS).forEach(([key, g]) => {
+    defs.append("marker")
+      .attr("id", `arrow-${key}`)
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 10)
+      .attr("refY", 0)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,-5L10,0L0,5")
+      .attr("fill", g.color);
+  });
+
+  const g = svg.append("g");
+  const zoom = d3.zoom().scaleExtent([0.2, 5]).on("zoom", (ev) => g.attr("transform", ev.transform));
+  svg.call(zoom);
+  document.getElementById("netReset").onclick = () => svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity);
+
+  const linkLayer = g.append("g").attr("class","links");
+  const linkSel = linkLayer
+    .selectAll("line")
+    .data(links)
+    .join("line")
+    .attr("class", d => `link link-${linkGroup(d)}`)
+    .attr("stroke", d => tieStyle(d.kind).color)
+    .attr("stroke-width", d => tieStyle(d.kind).width)
+    .attr("stroke-dasharray", d => tieStyle(d.kind).dash || null)
+    .attr("stroke-opacity", .38)
+    .attr("marker-end", d => d.kind === "contains" ? null : `url(#arrow-${linkGroup(d)})`);
+
+  const nodeSel = g.append("g")
+    .attr("class","nodes")
+    .selectAll("g.n")
+    .data(nodes)
+    .join("g")
+    .attr("class","n")
+    .style("cursor","pointer");
+
+  nodeSel.append("circle")
+    .attr("r", nodeRadius)
+    .attr("fill", d => d.id === "root" ? "var(--text)" : (BRANCHES[d.branch] ? BRANCHES[d.branch].color : "var(--muted)"))
+    .attr("stroke", "var(--chip)")
+    .attr("stroke-width", 1.5);
+
+  nodeSel.append("text")
+    .text(d => d.id === "root" ? "Networked democratic resilience" : d.name.replace(/^\d+(\.\d+)*\s*/,""))
+    .attr("x", d => nodeRadius(d) + 4)
+    .attr("y", 4)
+    .attr("font-size", d => d.depth <= 1 ? 11.5 : (d.depth === 2 ? 10 : 9))
+    .attr("fill", d => d.depth <= 1 ? "var(--text)" : "var(--muted)")
+    .attr("paint-order","stroke")
+    .attr("stroke","rgba(255,250,243,.94)")
+    .attr("stroke-width", 3)
+    .attr("font-weight", d => d.depth <= 1 ? 700 : 500);
+
+  const adjacency = new Map();
+  function addAdj(a,b,link){
+    if (!adjacency.has(a)) adjacency.set(a, {nodes:new Set(), links:new Set()});
+    adjacency.get(a).nodes.add(b);
+    adjacency.get(a).links.add(link);
+  }
+  links.forEach(l => {
+    const a = normId(l.source), b = normId(l.target);
+    addAdj(a,b,l); addAdj(b,a,l);
+  });
+
+  function applyNetworkState(focusId=null){
+    const focused = focusId ? (adjacency.get(focusId) || {nodes:new Set(),links:new Set()}) : null;
+    nodeSel.style("opacity", d => {
+      if (!branchVisible(d)) return 0.06;
+      if (!focused) return 1;
+      return d.id === focusId || focused.nodes.has(d.id) ? 1 : 0.12;
+    });
+    linkSel
+      .attr("stroke-opacity", d => {
+        if (!linkVisible(d)) return 0.02;
+        if (!focused) return .38;
+        return focused.links.has(d) ? .92 : .055;
+      })
+      .attr("stroke-width", d => {
+        const base = tieStyle(d.kind).width;
+        return focused && focused.links.has(d) ? base + 1.4 : base;
+      })
+      .attr("marker-end", d => {
+        if (d.kind === "contains" || !linkVisible(d)) return null;
+        return `url(#arrow-${linkGroup(d)})`;
+      });
+  }
+
+  function showNodeTooltip(ev, d){
+    const r = host.getBoundingClientRect();
+    tooltip.style.left = (ev.clientX - r.left + 12) + "px";
+    tooltip.style.top  = (ev.clientY - r.top + 12) + "px";
+    tooltip.style.display = "block";
+    const degreeText = d.id === "root" ? "" : `<br/><span style="color:var(--muted2)">${d.deg} direct connection${d.deg === 1 ? "" : "s"}</span>`;
+    tooltip.innerHTML = `<div class="t">${escapeHtml(d.name)}</div><div class="d">${escapeHtml((d.desc||"").slice(0,160) + ((d.desc||"").length>160?"…":""))}${degreeText}</div>`;
+  }
+
+  nodeSel.on("mousemove", (ev, d) => {
+    showNodeTooltip(ev, d);
+    applyNetworkState(d.id);
+  }).on("mouseleave", () => { tooltip.style.display="none"; applyNetworkState(); })
+    .on("click", (ev, d) => { if (d.id !== "root"){ selectNode(d.id); switchView("viewExplorer"); } });
+
+  linkSel.on("mousemove", (ev, d) => {
+    const r = host.getBoundingClientRect();
+    tooltip.style.left = (ev.clientX - r.left + 12) + "px";
+    tooltip.style.top  = (ev.clientY - r.top + 12) + "px";
+    tooltip.style.display = "block";
+    const s = typeof d.source === "object" ? d.source.name : d.source;
+    const t = typeof d.target === "object" ? d.target.name : d.target;
+    tooltip.innerHTML = `<div class="t">${escapeHtml(s)} → ${escapeHtml(t)}</div><div class="d">Relation: <b>${escapeHtml(d.kind)}</b></div>`;
+    const ids = new Set([normId(d.source), normId(d.target)]);
+    nodeSel.style("opacity", n => (!branchVisible(n) ? 0.06 : ids.has(n.id) ? 1 : 0.12));
+    linkSel.attr("stroke-opacity", l => l === d ? .95 : (linkVisible(l) ? .055 : .02));
+  }).on("mouseleave", () => { tooltip.style.display="none"; applyNetworkState(); });
+
+  nodeSel.call(d3.drag()
+    .on("start", (ev, d) => { if (!ev.active) netSim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+    .on("drag",  (ev, d) => { d.fx=ev.x; d.fy=ev.y; })
+    .on("end",   (ev, d) => { if (!ev.active) netSim.alphaTarget(0); d.fx=null; d.fy=null; }));
+
+  netSim = d3.forceSimulation(nodes)
+    .force("charge", d3.forceManyBody().strength(-220))
+    .force("link",   d3.forceLink(links).id(d => d.id).distance(d => d.kind === "contains" ? 60 : 115).strength(0.5))
+    .force("center", d3.forceCenter(W/2, H/2))
+    .force("collide", d3.forceCollide().radius(d => nodeRadius(d) + 7))
+    .on("tick", () => {
+      linkSel
+        .attr("x1", d => {
+          const dx = d.target.x - d.source.x, dy = d.target.y - d.source.y, len = Math.hypot(dx,dy) || 1;
+          return d.source.x + dx/len * (nodeRadius(d.source) + 1);
+        })
+        .attr("y1", d => {
+          const dx = d.target.x - d.source.x, dy = d.target.y - d.source.y, len = Math.hypot(dx,dy) || 1;
+          return d.source.y + dy/len * (nodeRadius(d.source) + 1);
+        })
+        .attr("x2", d => {
+          const dx = d.target.x - d.source.x, dy = d.target.y - d.source.y, len = Math.hypot(dx,dy) || 1;
+          const pad = nodeRadius(d.target) + (d.kind === "contains" ? 1 : 8);
+          return d.target.x - dx/len * pad;
+        })
+        .attr("y2", d => {
+          const dx = d.target.x - d.source.x, dy = d.target.y - d.source.y, len = Math.hypot(dx,dy) || 1;
+          const pad = nodeRadius(d.target) + (d.kind === "contains" ? 1 : 8);
+          return d.target.y - dy/len * pad;
+        });
+      nodeSel.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+
+  const legend = document.getElementById("netLegend");
+  legend.innerHTML = `<div style="font-weight:700;color:var(--text);margin-bottom:6px;font-size:12px">Branches</div>` +
+    Object.entries(BRANCHES).map(([k,b]) => `
+      <div class="lr" data-branch="${k}" title="Click to hide/show this branch">
+        <span class="d" style="background:${b.color}"></span>
+        <span class="n">${b.name.replace(/^\d+\.\s*/,"")}</span>
+        <span class="c">${NODES.filter(n => n.branch === k).length}</span>
+      </div>
+    `).join("");
+  legend.querySelectorAll(".lr").forEach(lr => {
+    lr.onclick = () => {
+      const b = lr.dataset.branch;
+      if (branchMuted.has(b)) branchMuted.delete(b); else branchMuted.add(b);
+      lr.classList.toggle("muted", branchMuted.has(b));
+      applyNetworkState();
+    };
+  });
+
+  const tieLegend = document.getElementById("netTieLegend");
+  tieLegend.innerHTML = `<div class="title">Tie / relation legend</div>` +
+    Object.entries(TIE_STYLE_GROUPS).map(([key,g]) => `
+      <div class="tie-row" data-tie-group="${key}" title="Click to hide/show this relation type">
+        <svg viewBox="0 0 46 12" aria-hidden="true">
+          <defs><marker id="legend-arrow-${key}" viewBox="0 -5 10 10" refX="10" refY="0" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,-5L10,0L0,5" fill="${g.color}"></path></marker></defs>
+          <line x1="2" y1="6" x2="41" y2="6" stroke="${g.color}" stroke-width="${g.width}" ${g.dash ? `stroke-dasharray="${g.dash}"` : ""} ${key === "hierarchy" ? "" : `marker-end="url(#legend-arrow-${key})"`}></line>
+        </svg>
+        <div><b>${g.label}</b><br/><span style="color:var(--muted2)">${g.kinds.join(", ")}</span></div>
+      </div>`).join("") +
+    `<div class="filter-note">Click a relation type to filter it. Direction follows the curated source → target relation, e.g. information disorder → public trust.</div>`;
+  tieLegend.querySelectorAll("[data-tie-group]").forEach(row => {
+    row.addEventListener("click", () => {
+      const key = row.dataset.tieGroup;
+      if (tieMuted.has(key)) tieMuted.delete(key); else tieMuted.add(key);
+      row.classList.toggle("muted", tieMuted.has(key));
+      applyNetworkState();
+    });
+  });
+  applyNetworkState();
+}
+
+/* ============================================================
+   SUNBURST — 4 layers
+   ============================================================ */
+let sunDrawn = false;
+function drawSunburst(){
+  if (sunDrawn) return;
+  const host = document.getElementById("sunHost");
+  const tooltip = document.getElementById("sunTooltip");
+  if (typeof d3 === "undefined"){
+    drawSunburstLocalFallback();
+    return;
+  }
+  sunDrawn = true;
+  const W = host.clientWidth, H = host.clientHeight;
+  const R = Math.min(W,H) / 2 - 8;
+
+  // Build hierarchy
+  function buildChild(node){
+    const kids = CHILDREN[node.id] || [];
+    return {
+      id: node.id, name: node.name, branch: node.branch, depth: node.depth || 0,
+      desc: node.description,
+      children: kids.length ? kids.map(buildChild) : null,
+      value: kids.length ? undefined : 1
+    };
+  }
+  const rootData = {
+    id: "root", name: ROOT.name, branch: "root", depth: 0, desc: ROOT.description,
+    children: NODES.filter(n => n.depth === 1).map(buildChild)
+  };
+
+  const root = d3.hierarchy(rootData).sum(d => d.value || 0).sort((a,b) => b.value - a.value);
+  const partition = d3.partition().size([2 * Math.PI, R]);
+  partition(root);
+
+  const arc = d3.arc()
+    .startAngle(d => d.x0)
+    .endAngle(d => d.x1)
+    .padAngle(0.004)
+    .padRadius(R * 0.6)
+    .innerRadius(d => d.y0)
+    .outerRadius(d => d.y1 - 1);
+
+  const svg = d3.select("#sunSvg")
+    .attr("viewBox", `${-W/2} ${-H/2} ${W} ${H}`)
+    .attr("preserveAspectRatio","xMidYMid meet");
+  svg.selectAll("*").remove();
+
+  function colorFor(d){
+    if (d.depth === 0) return "var(--panel2)";
+    const b = BRANCHES[d.data.branch];
+    if (!b) return "#475569";
+    const base = d3.color(b.color);
+    // Slightly lighten with depth
+    const ratio = Math.max(0, (d.depth - 1) * 0.16);
+    return base.brighter(ratio).formatHex();
+  }
+
+  const g = svg.append("g");
+
+  g.selectAll("path")
+    .data(root.descendants().filter(d => d.depth > 0))
+    .join("path")
+    .attr("d", arc)
+    .attr("fill", colorFor)
+    .attr("stroke", "var(--chip)")
+    .attr("stroke-width", 1)
+    .style("cursor","pointer")
+    .on("mousemove", (ev, d) => {
+      const r = host.getBoundingClientRect();
+      tooltip.style.left = (ev.clientX - r.left + 12) + "px";
+      tooltip.style.top  = (ev.clientY - r.top + 12) + "px";
+      tooltip.style.display = "block";
+      const branch = BRANCHES[d.data.branch];
+      tooltip.innerHTML = `
+        <div class="p">${branch ? branch.name : ""} · layer ${d.depth}</div>
+        <div class="t">${escapeHtml(d.data.name)}</div>
+        <div class="d">${escapeHtml((d.data.desc||"").slice(0,180) + ((d.data.desc||"").length>180?"…":""))}</div>
+      `;
+    })
+    .on("mouseleave", () => tooltip.style.display = "none")
+    .on("click", (ev, d) => { selectNode(d.data.id); switchView("viewExplorer"); });
+
+  // Labels for outer arcs (only large enough ones)
+  g.selectAll("text.lbl")
+    .data(root.descendants().filter(d => d.depth > 0 && (d.x1 - d.x0) > 0.06))
+    .join("text")
+    .attr("class","lbl")
+    .attr("transform", function(d){
+      const a = (d.x0 + d.x1) / 2;
+      const r = (d.y0 + d.y1) / 2;
+      const deg = a * 180 / Math.PI - 90;
+      const flip = (a > Math.PI / 2 && a < Math.PI * 1.5);
+      return `rotate(${deg}) translate(${r},0) ${flip ? "rotate(180)" : ""}`;
+    })
+    .attr("text-anchor", function(d){
+      const a = (d.x0 + d.x1) / 2;
+      return (a > Math.PI / 2 && a < Math.PI * 1.5) ? "end" : "start";
+    })
+    .attr("dx", function(d){
+      const a = (d.x0 + d.x1) / 2;
+      return (a > Math.PI / 2 && a < Math.PI * 1.5) ? -4 : 4;
+    })
+    .attr("dy", "0.32em")
+    .attr("font-size", d => d.depth === 1 ? 11 : (d.depth === 2 ? 9.5 : 8.5))
+    .attr("font-weight", d => d.depth === 1 ? 700 : 500)
+    .attr("fill", d => d.depth === 1 ? "var(--chip)" : "var(--chip)")
+    .style("pointer-events","none")
+    .text(d => {
+      const n = d.data.name.replace(/^\d+(\.\d+)*\s*/,"");
+      const arcLen = (d.x1 - d.x0) * ((d.y0 + d.y1) / 2);
+      const maxChars = Math.max(4, Math.floor(arcLen / 6));
+      return n.length > maxChars ? n.slice(0, maxChars-1) + "…" : n;
+    });
+
+  // Centre label
+  svg.append("text")
+    .attr("id","sunCenter")
+    .attr("fill","var(--text)")
+    .attr("font-size", 13)
+    .attr("font-weight", 700)
+    .append("tspan").text("Networked").attr("x",0).attr("dy","-0.5em")
+    .select(function(){return this.parentNode;})
+    .append("tspan").text("democratic").attr("x",0).attr("dy","1.1em")
+    .select(function(){return this.parentNode;})
+    .append("tspan").text("resilience").attr("x",0).attr("dy","1.1em");
+}
+
+/* ============================================================
+   SELF-CONTAINED SVG FALLBACKS
+   These keep the Network and Radial Map usable when the external D3 library
+   is unavailable, while preserving the same embedded ontology data.
+   ============================================================ */
+const SVG_NS = "http://www.w3.org/2000/svg";
+function svgEl(name, attrs={}){
+  const el = document.createElementNS(SVG_NS, name);
+  Object.entries(attrs).forEach(([k,v]) => {
+    if (v !== null && v !== undefined && v !== false) el.setAttribute(k, String(v));
+  });
+  return el;
+}
+function cssVar(name, fallback){
+  try { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback; }
+  catch(e){ return fallback; }
+}
+function lightenHex(hex, ratio=0){
+  const m = /^#?([0-9a-f]{6})$/i.exec(String(hex||""));
+  if (!m) return hex || "#999999";
+  const n = parseInt(m[1], 16);
+  let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  r = Math.round(r + (255-r)*ratio); g = Math.round(g + (255-g)*ratio); b = Math.round(b + (255-b)*ratio);
+  return "#" + [r,g,b].map(x => x.toString(16).padStart(2,"0")).join("");
+}
+
+function drawNetworkLocalFallback(){
+  if (netDrawn) return;
+  netDrawn = true;
+  const svg = document.getElementById("netSvg");
+  const host = document.getElementById("netHost");
+  const tooltip = document.getElementById("netTooltip");
+  if (!svg || !host) return;
+  const W = Math.max(900, host.clientWidth || 1200);
+  const H = Math.max(560, host.clientHeight || 680);
+  svg.innerHTML = "";
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+  const { nodes, links } = buildGraph();
+  const byId = new Map(nodes.map(n => [n.id, n]));
+  links.forEach(l => { l.sourceNode = byId.get(l.source); l.targetNode = byId.get(l.target); });
+  const branchMuted = new Set();
+  const tieMuted = new Set();
+
+  function nodeRadius(d){ return d.id === "root" ? 14 : 5 + Math.min(10, d.deg * 0.7); }
+  function linkGroup(d){ return tieGroup(d.kind); }
+  function branchVisible(d){ return d && (d.id === "root" || !branchMuted.has(d.branch)); }
+  function linkVisible(d){ return !tieMuted.has(linkGroup(d)) && branchVisible(d.sourceNode) && branchVisible(d.targetNode); }
+
+  // Initial positions: branch wedges + light force relaxation.
+  const branchKeys = Object.keys(BRANCHES);
+  const branchIndex = new Map(branchKeys.map((b,i) => [b,i]));
+  const branchCounts = {};
+  nodes.forEach(n => { if (n.branch && n.branch !== "root") branchCounts[n.branch] = (branchCounts[n.branch] || 0) + 1; });
+  const branchSeen = {};
+  const cx = W/2, cy = H/2;
+  nodes.forEach(n => {
+    if (n.id === "root") { n.x = cx; n.y = cy; n.vx = 0; n.vy = 0; return; }
+    const bi = branchIndex.get(n.branch) ?? 0;
+    const total = branchCounts[n.branch] || 1;
+    const seen = branchSeen[n.branch] = (branchSeen[n.branch] || 0) + 1;
+    const base = -Math.PI/2 + (bi / branchKeys.length) * Math.PI * 2;
+    const spread = Math.PI * 2 / branchKeys.length * 0.72;
+    const offset = ((seen - 0.5) / total - 0.5) * spread;
+    const a = base + offset;
+    const depth = Math.max(1, n.depth || 1);
+    const rx = Math.min(W * 0.42, 110 + depth * 120);
+    const ry = Math.min(H * 0.40, 72 + depth * 86);
+    n.x = cx + Math.cos(a) * rx + ((seen % 5)-2)*9;
+    n.y = cy + Math.sin(a) * ry + (((seen*3) % 5)-2)*7;
+    n.vx = 0; n.vy = 0;
+  });
+  const visibleLinks = links.filter(l => l.sourceNode && l.targetNode);
+  for (let iter = 0; iter < 260; iter++){
+    // charge, O(n^2) is acceptable for this ontology size
+    for (let i=0; i<nodes.length; i++){
+      const a = nodes[i];
+      for (let j=i+1; j<nodes.length; j++){
+        const b = nodes[j];
+        let dx = b.x-a.x, dy = b.y-a.y;
+        let d2 = dx*dx + dy*dy;
+        if (d2 < 1){ dx = (j%3)-1 || 0.5; dy = (i%3)-1 || 0.5; d2 = dx*dx + dy*dy; }
+        const dist = Math.sqrt(d2);
+        const minD = nodeRadius(a) + nodeRadius(b) + 16;
+        const strength = (dist < 260 ? 65 : 18) / d2;
+        const fx = dx/dist * strength;
+        const fy = dy/dist * strength;
+        if (a.id !== "root") { a.vx -= fx; a.vy -= fy; }
+        if (b.id !== "root") { b.vx += fx; b.vy += fy; }
+        if (dist < minD){
+          const push = (minD - dist) * 0.018;
+          if (a.id !== "root") { a.vx -= dx/dist*push; a.vy -= dy/dist*push; }
+          if (b.id !== "root") { b.vx += dx/dist*push; b.vy += dy/dist*push; }
+        }
+      }
+    }
+    // link attraction
+    visibleLinks.forEach(l => {
+      const s = l.sourceNode, t = l.targetNode;
+      let dx = t.x-s.x, dy = t.y-s.y;
+      const dist = Math.hypot(dx,dy) || 1;
+      const ideal = l.kind === "contains" ? 72 : 150;
+      const k = l.kind === "contains" ? 0.026 : 0.010;
+      const f = (dist - ideal) * k;
+      const fx = dx/dist * f, fy = dy/dist * f;
+      if (s.id !== "root") { s.vx += fx; s.vy += fy; }
+      if (t.id !== "root") { t.vx -= fx; t.vy -= fy; }
+    });
+    nodes.forEach(n => {
+      if (n.id === "root") { n.x = cx; n.y = cy; return; }
+      n.vx += (cx - n.x) * 0.0009;
+      n.vy += (cy - n.y) * 0.0009;
+      n.vx *= 0.86; n.vy *= 0.86;
+      n.x += n.vx; n.y += n.vy;
+      n.x = Math.max(22, Math.min(W-22, n.x));
+      n.y = Math.max(22, Math.min(H-22, n.y));
+    });
+  }
+
+  const defs = svgEl("defs");
+  Object.entries(TIE_STYLE_GROUPS).forEach(([key,g]) => {
+    const marker = svgEl("marker", { id:`arrow-local-${key}`, viewBox:"0 -5 10 10", refX:"10", refY:"0", markerWidth:"6", markerHeight:"6", orient:"auto" });
+    marker.appendChild(svgEl("path", { d:"M0,-5L10,0L0,5", fill:g.color }));
+    defs.appendChild(marker);
+  });
+  svg.appendChild(defs);
+  const viewport = svgEl("g", { id:"netLocalViewport" });
+  const linkLayer = svgEl("g", { class:"links" });
+  const nodeLayer = svgEl("g", { class:"nodes" });
+  viewport.appendChild(linkLayer); viewport.appendChild(nodeLayer); svg.appendChild(viewport);
+
+  let transform = {x:0, y:0, k:1};
+  function applyTransform(){ viewport.setAttribute("transform", `translate(${transform.x},${transform.y}) scale(${transform.k})`); }
+  function toLocalPoint(ev){
+    const r = svg.getBoundingClientRect();
+    const sx = W / r.width, sy = H / r.height;
+    return { x: (ev.clientX - r.left) * sx, y: (ev.clientY - r.top) * sy };
+  }
+  let panning = false, panStart = null;
+  svg.addEventListener("wheel", ev => {
+    ev.preventDefault();
+    const p = toLocalPoint(ev);
+    const old = transform.k;
+    const next = Math.max(0.25, Math.min(4.5, old * (ev.deltaY < 0 ? 1.12 : 0.89)));
+    transform.x = p.x - (p.x - transform.x) * next / old;
+    transform.y = p.y - (p.y - transform.y) * next / old;
+    transform.k = next; applyTransform();
+  }, {passive:false});
+  svg.addEventListener("pointerdown", ev => { if (ev.target === svg || ev.target === viewport){ panning = true; panStart = {x:ev.clientX, y:ev.clientY, tx:transform.x, ty:transform.y}; svg.setPointerCapture(ev.pointerId); } });
+  svg.addEventListener("pointermove", ev => { if (!panning) return; const r = svg.getBoundingClientRect(); transform.x = panStart.tx + (ev.clientX-panStart.x) * W/r.width; transform.y = panStart.ty + (ev.clientY-panStart.y) * H/r.height; applyTransform(); });
+  svg.addEventListener("pointerup", ev => { panning = false; try{svg.releasePointerCapture(ev.pointerId)}catch(e){} });
+  const resetBtn = document.getElementById("netReset");
+  if (resetBtn) resetBtn.onclick = () => { transform = {x:0,y:0,k:1}; applyTransform(); };
+
+  const linkEls = visibleLinks.map(l => {
+    const style = tieStyle(l.kind);
+    const line = svgEl("line", { stroke: style.color, "stroke-width": style.width, "stroke-opacity":"0.38" });
+    if (style.dash) line.setAttribute("stroke-dasharray", style.dash);
+    if (l.kind !== "contains") line.setAttribute("marker-end", `url(#arrow-local-${linkGroup(l)})`);
+    line.style.cursor = "pointer";
+    line.__data__ = l;
+    linkLayer.appendChild(line);
+    return line;
+  });
+  const nodeEls = nodes.map(n => {
+    const g = svgEl("g", { class:"n" });
+    g.style.cursor = "pointer";
+    g.__data__ = n;
+    const fill = n.id === "root" ? cssVar("--text", "#1f2a2e") : (BRANCHES[n.branch]?.color || cssVar("--muted", "#66736c"));
+    g.appendChild(svgEl("circle", { r:nodeRadius(n), fill, stroke:cssVar("--chip", "#fff6e8"), "stroke-width":"1.5" }));
+    const text = svgEl("text", { x:nodeRadius(n)+4, y:4, "font-size": n.depth <= 1 ? 11.5 : (n.depth === 2 ? 10 : 9), fill: n.depth <= 1 ? cssVar("--text", "#1f2a2e") : cssVar("--muted", "#66736c"), "font-weight": n.depth <= 1 ? 700 : 500, "paint-order":"stroke", stroke:"rgba(255,250,243,.94)", "stroke-width":"3" });
+    text.textContent = n.id === "root" ? "Networked democratic resilience" : n.name.replace(/^\d+(\.\d+)*\s*/,"");
+    g.appendChild(text);
+    nodeLayer.appendChild(g);
+    return g;
+  });
+
+  const adjacency = new Map();
+  function addAdj(a,b,link){ if (!adjacency.has(a)) adjacency.set(a, {nodes:new Set(), links:new Set()}); adjacency.get(a).nodes.add(b); adjacency.get(a).links.add(link); }
+  visibleLinks.forEach(l => { addAdj(l.source, l.target, l); addAdj(l.target, l.source, l); });
+
+  function updateGeometry(){
+    linkEls.forEach(line => {
+      const l = line.__data__, s = l.sourceNode, t = l.targetNode;
+      const dx = t.x - s.x, dy = t.y - s.y, len = Math.hypot(dx,dy) || 1;
+      const sr = nodeRadius(s) + 1;
+      const tr = nodeRadius(t) + (l.kind === "contains" ? 1 : 8);
+      line.setAttribute("x1", s.x + dx/len*sr);
+      line.setAttribute("y1", s.y + dy/len*sr);
+      line.setAttribute("x2", t.x - dx/len*tr);
+      line.setAttribute("y2", t.y - dy/len*tr);
+    });
+    nodeEls.forEach(g => { const n = g.__data__; g.setAttribute("transform", `translate(${n.x},${n.y})`); });
+  }
+  function applyNetworkState(focusId=null){
+    const focused = focusId ? (adjacency.get(focusId) || {nodes:new Set(),links:new Set()}) : null;
+    nodeEls.forEach(g => {
+      const d = g.__data__;
+      let op = 1;
+      if (!branchVisible(d)) op = 0.06;
+      else if (focused) op = (d.id === focusId || focused.nodes.has(d.id)) ? 1 : 0.12;
+      g.style.opacity = op;
+    });
+    linkEls.forEach(line => {
+      const d = line.__data__;
+      const vis = linkVisible(d);
+      let op = vis ? 0.38 : 0.02;
+      if (focused) op = (vis && focused.links.has(d)) ? 0.92 : 0.055;
+      line.setAttribute("stroke-opacity", op);
+      line.setAttribute("stroke-width", focused && focused.links.has(d) ? tieStyle(d.kind).width + 1.4 : tieStyle(d.kind).width);
+      if (d.kind !== "contains" && vis) line.setAttribute("marker-end", `url(#arrow-local-${linkGroup(d)})`); else line.removeAttribute("marker-end");
+    });
+  }
+  function showTooltip(ev, d){
+    if (!tooltip) return;
+    const r = host.getBoundingClientRect();
+    tooltip.style.left = (ev.clientX - r.left + 12) + "px";
+    tooltip.style.top = (ev.clientY - r.top + 12) + "px";
+    tooltip.style.display = "block";
+    const degreeText = d.id === "root" ? "" : `<br/><span style="color:var(--muted2)">${d.deg} direct connection${d.deg === 1 ? "" : "s"}</span>`;
+    tooltip.innerHTML = `<div class="t">${escapeHtml(d.name)}</div><div class="d">${escapeHtml((d.desc||"").slice(0,160) + ((d.desc||"").length>160?"…":""))}${degreeText}</div>`;
+  }
+  nodeEls.forEach(g => {
+    const d = g.__data__;
+    let dragging = false;
+    g.addEventListener("pointerdown", ev => { ev.stopPropagation(); dragging = true; g.setPointerCapture(ev.pointerId); });
+    g.addEventListener("pointermove", ev => {
+      if (dragging){ const p = toLocalPoint(ev); d.x = (p.x - transform.x) / transform.k; d.y = (p.y - transform.y) / transform.k; updateGeometry(); }
+      showTooltip(ev, d); applyNetworkState(d.id);
+    });
+    g.addEventListener("pointerup", ev => { dragging = false; try{g.releasePointerCapture(ev.pointerId)}catch(e){} });
+    g.addEventListener("pointerleave", () => { if (tooltip) tooltip.style.display="none"; applyNetworkState(); });
+    g.addEventListener("click", ev => { ev.stopPropagation(); if (d.id !== "root"){ selectNode(d.id); switchView("viewExplorer"); } });
+  });
+  linkEls.forEach(line => {
+    line.addEventListener("mousemove", ev => {
+      const d = line.__data__;
+      if (tooltip){
+        const r = host.getBoundingClientRect();
+        tooltip.style.left = (ev.clientX - r.left + 12) + "px";
+        tooltip.style.top = (ev.clientY - r.top + 12) + "px";
+        tooltip.style.display = "block";
+        tooltip.innerHTML = `<div class="t">${escapeHtml(d.sourceNode.name)} → ${escapeHtml(d.targetNode.name)}</div><div class="d">Relation: <b>${escapeHtml(d.kind)}</b></div>`;
+      }
+      const ids = new Set([d.source, d.target]);
+      nodeEls.forEach(g => { const n = g.__data__; g.style.opacity = (!branchVisible(n) ? 0.06 : ids.has(n.id) ? 1 : 0.12); });
+      linkEls.forEach(l2 => l2.setAttribute("stroke-opacity", l2 === line ? 0.95 : (linkVisible(l2.__data__) ? 0.055 : 0.02)));
+    });
+    line.addEventListener("mouseleave", () => { if (tooltip) tooltip.style.display="none"; applyNetworkState(); });
+  });
+
+  updateGeometry();
+  // Branch legend
+  const legend = document.getElementById("netLegend");
+  if (legend){
+    legend.innerHTML = `<div style="font-weight:700;color:var(--text);margin-bottom:6px;font-size:12px">Branches</div>` +
+      Object.entries(BRANCHES).map(([k,b]) => `
+        <div class="lr" data-branch="${k}" title="Click to hide/show this branch">
+          <span class="d" style="background:${b.color}"></span>
+          <span class="n">${b.name.replace(/^\d+\.\s*/,"")}</span>
+          <span class="c">${NODES.filter(n => n.branch === k).length}</span>
+        </div>`).join("");
+    legend.querySelectorAll(".lr").forEach(lr => {
+      lr.onclick = () => {
+        const b = lr.dataset.branch;
+        if (branchMuted.has(b)) branchMuted.delete(b); else branchMuted.add(b);
+        lr.classList.toggle("muted", branchMuted.has(b));
+        applyNetworkState();
+      };
+    });
+  }
+  const tieLegend = document.getElementById("netTieLegend");
+  if (tieLegend){
+    tieLegend.innerHTML = `<div class="title">Tie / relation legend</div>` +
+      Object.entries(TIE_STYLE_GROUPS).map(([key,g]) => `
+        <div class="tie-row" data-tie-group="${key}" title="Click to hide/show this relation type">
+          <svg viewBox="0 0 46 12" aria-hidden="true">
+            <defs><marker id="legend-arrow-local-${key}" viewBox="0 -5 10 10" refX="10" refY="0" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,-5L10,0L0,5" fill="${g.color}"></path></marker></defs>
+            <line x1="2" y1="6" x2="41" y2="6" stroke="${g.color}" stroke-width="${g.width}" ${g.dash ? `stroke-dasharray="${g.dash}"` : ""} ${key === "hierarchy" ? "" : `marker-end="url(#legend-arrow-local-${key})"`}></line>
+          </svg>
+          <div><b>${g.label}</b><br/><span style="color:var(--muted2)">${g.kinds.join(", ")}</span></div>
+        </div>`).join("") + `<div class="filter-note">Click a relation type to filter it. Direction follows the curated source → target relation.</div>`;
+    tieLegend.querySelectorAll("[data-tie-group]").forEach(row => {
+      row.addEventListener("click", () => {
+        const key = row.dataset.tieGroup;
+        if (tieMuted.has(key)) tieMuted.delete(key); else tieMuted.add(key);
+        row.classList.toggle("muted", tieMuted.has(key));
+        applyNetworkState();
+      });
+    });
+  }
+  applyNetworkState();
+}
+
+function drawSunburstLocalFallback(){
+  if (sunDrawn) return;
+  sunDrawn = true;
+  const host = document.getElementById("sunHost");
+  const svg = document.getElementById("sunSvg");
+  const tooltip = document.getElementById("sunTooltip");
+  if (!host || !svg) return;
+  const W = Math.max(780, host.clientWidth || 1000);
+  const H = Math.max(640, host.clientHeight || 760);
+  const R = Math.min(W,H) / 2 - 12;
+  svg.innerHTML = "";
+  svg.setAttribute("viewBox", `${-W/2} ${-H/2} ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio","xMidYMid meet");
+  function buildNode(node){
+    const kids = CHILDREN[node.id] || [];
+    const obj = { id:node.id, name:node.name, branch:node.branch, depth:node.depth || 0, desc:node.description, children:kids.map(buildNode), leaves:0 };
+    obj.leaves = obj.children.length ? obj.children.reduce((s,c)=>s+c.leaves,0) : 1;
+    return obj;
+  }
+  const root = { id:"root", name:ROOT.name, branch:"root", depth:0, desc:ROOT.description, children:NODES.filter(n => n.depth === 1).map(buildNode), leaves:0 };
+  root.leaves = root.children.reduce((s,c)=>s+c.leaves,0);
+  const all = [];
+  function layout(n, a0, a1, depth){
+    n.a0 = a0; n.a1 = a1; n.ldepth = depth;
+    all.push(n);
+    if (!n.children.length) return;
+    let cur = a0;
+    n.children.forEach(c => {
+      const span = (a1-a0) * (c.leaves / n.leaves);
+      layout(c, cur, cur+span, depth+1);
+      cur += span;
+    });
+  }
+  layout(root, 0, Math.PI*2, 0);
+  const maxDepth = Math.max(...all.map(n => n.ldepth));
+  const step = R / (maxDepth + 1);
+  function sectorPath(r0, r1, a0, a1){
+    a0 -= Math.PI/2; a1 -= Math.PI/2;
+    const large = (a1-a0) > Math.PI ? 1 : 0;
+    const p0 = [Math.cos(a0)*r1, Math.sin(a0)*r1];
+    const p1 = [Math.cos(a1)*r1, Math.sin(a1)*r1];
+    const p2 = [Math.cos(a1)*r0, Math.sin(a1)*r0];
+    const p3 = [Math.cos(a0)*r0, Math.sin(a0)*r0];
+    return `M${p0[0]},${p0[1]} A${r1},${r1} 0 ${large} 1 ${p1[0]},${p1[1]} L${p2[0]},${p2[1]} A${r0},${r0} 0 ${large} 0 ${p3[0]},${p3[1]} Z`;
+  }
+  const g = svgEl("g"); svg.appendChild(g);
+  all.filter(n => n.ldepth > 0).forEach(n => {
+    const r0 = n.ldepth * step;
+    const r1 = (n.ldepth + 1) * step - 1;
+    const b = BRANCHES[n.branch];
+    const fill = n.ldepth === 1 ? (b?.color || "#999999") : lightenHex(b?.color || "#999999", Math.min(0.45, (n.ldepth-1)*0.13));
+    const path = svgEl("path", { d:sectorPath(r0,r1,n.a0,n.a1), fill, stroke:cssVar("--chip", "#fff6e8"), "stroke-width":"1" });
+    path.style.cursor = "pointer";
+    path.addEventListener("mousemove", ev => {
+      if (!tooltip) return;
+      const rect = host.getBoundingClientRect();
+      tooltip.style.left = (ev.clientX - rect.left + 12) + "px";
+      tooltip.style.top = (ev.clientY - rect.top + 12) + "px";
+      tooltip.style.display = "block";
+      tooltip.innerHTML = `<div class="p">${escapeHtml(b ? b.name : "")} · layer ${n.ldepth}</div><div class="t">${escapeHtml(n.name)}</div><div class="d">${escapeHtml((n.desc||"").slice(0,180) + ((n.desc||"").length>180?"…":""))}</div>`;
+    });
+    path.addEventListener("mouseleave", () => { if (tooltip) tooltip.style.display = "none"; });
+    path.addEventListener("click", () => { if (n.id !== "root"){ selectNode(n.id); switchView("viewExplorer"); } });
+    g.appendChild(path);
+  });
+  all.filter(n => n.ldepth > 0 && (n.a1-n.a0) > 0.06).forEach(n => {
+    const a = (n.a0+n.a1)/2 - Math.PI/2;
+    const r = (n.ldepth + 0.5) * step;
+    const deg = a * 180 / Math.PI;
+    const flip = (a > Math.PI/2 || a < -Math.PI/2);
+    const text = svgEl("text", { transform:`rotate(${deg}) translate(${r},0) ${flip ? "rotate(180)" : ""}`, "text-anchor":flip ? "end" : "start", dx:flip ? -4 : 4, dy:"0.32em", "font-size": n.ldepth === 1 ? 11 : (n.ldepth === 2 ? 9.5 : 8.5), "font-weight": n.ldepth === 1 ? 700 : 500, fill:cssVar("--chip", "#fff6e8") });
+    text.style.pointerEvents = "none";
+    const label = n.name.replace(/^\d+(\.\d+)*\s*/,"");
+    const arcLen = (n.a1-n.a0) * r;
+    const maxChars = Math.max(4, Math.floor(arcLen/6));
+    text.textContent = label.length > maxChars ? label.slice(0, maxChars-1) + "…" : label;
+    g.appendChild(text);
+  });
+  const center = svgEl("text", { id:"sunCenter", fill:cssVar("--text", "#1f2a2e"), "font-size":"13", "font-weight":"700", "text-anchor":"middle", "dominant-baseline":"central" });
+  ["Networked", "democratic", "resilience"].forEach((line, i) => {
+    const t = svgEl("tspan", { x:"0", dy: i === 0 ? "-0.5em" : "1.1em" });
+    t.textContent = line; center.appendChild(t);
+  });
+  svg.appendChild(center);
+}
+
+
+/* ============================================================
+   DOWNLOADS + CONTRIBUTION FORM
+   ============================================================ */
+const CONTACT_EMAILS = ["Silvia.Fierascu@e-uvt.ro", "Inna.Melnykovska@eui.eu"];
+const CONTACT_EMAIL = CONTACT_EMAILS.join(",");
+
+function csvEscape(value){
+  const s = value == null ? "" : String(value);
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+}
+function toCsv(rows, columns){
+  return [columns.join(","), ...rows.map(row => columns.map(c => csvEscape(row[c])).join(","))].join("\n");
+}
+function downloadText(filename, text, mime="text/plain;charset=utf-8"){
+  const blob = new Blob([text], { type:mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function networkNodeRows(){
+  return [{...ROOT, parent:"", branch:"root", depth:0, sources:[]}].concat(NODES).map(n => ({
+    id:n.id,
+    label:n.name,
+    parent:n.parent || "",
+    branch:n.branch || "",
+    branch_label:BRANCHES[n.branch] ? BRANCHES[n.branch].name : "Root",
+    depth:n.depth || 0,
+    source_ids:(n.sources || []).join("|"),
+    source_count:(n.sources || []).length,
+    description:n.description || ""
+  }));
+}
+function networkLinkRows(){
+  const hierarchy = NODES.map(n => ({source:n.parent, target:n.id, relation:"contains", relation_group:"hierarchy", is_hierarchy:1}));
+  const cross = RELATIONS.map(r => ({source:r.s, target:r.t, relation:r.p, relation_group:tieGroup(r.p), is_hierarchy:0}));
+  return hierarchy.concat(cross);
+}
+function radialRows(){
+  function pathFor(node){
+    const chain = [];
+    let cur = node;
+    while (cur){ chain.unshift(cur.name); cur = cur.parent ? NODE_BY_ID[cur.parent] : null; }
+    return chain.join(" > ");
+  }
+  return networkNodeRows().map(r => {
+    const node = NODE_BY_ID[r.id] || ROOT;
+    return {
+      id:r.id,
+      label:r.label,
+      parent:r.parent,
+      branch:r.branch,
+      branch_label:r.branch_label,
+      depth:r.depth,
+      path:pathFor(node),
+      source_ids:r.source_ids,
+      source_count:r.source_count,
+      description:r.description
+    };
+  });
+}
+function downloadSvgAsPng(svgId, filename){
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const clone = svg.cloneNode(true);
+  clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  const vars = ["--bg","--bg2","--panel","--panel2","--line","--text","--muted","--muted2","--chip","--accent","--accent2","--warn","--good","--bad","--violet","--ink"];
+  const rootStyle = getComputedStyle(document.documentElement);
+  const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+  style.textContent = `:root{${vars.map(v => `${v}:${rootStyle.getPropertyValue(v).trim()};`).join("")}} text{font-family:Inter,Arial,sans-serif}`;
+  clone.insertBefore(style, clone.firstChild);
+  const vb = svg.viewBox && svg.viewBox.baseVal;
+  const width = Math.max(1, Math.round(svg.clientWidth || (vb && vb.width) || 1200));
+  const height = Math.max(1, Math.round(svg.clientHeight || (vb && vb.height) || 900));
+  clone.setAttribute("width", width);
+  clone.setAttribute("height", height);
+  const serialized = new XMLSerializer().serializeToString(clone);
+  const blob = new Blob([serialized], {type:"image/svg+xml;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = width * 2; canvas.height = height * 2;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(2,2);
+    ctx.fillStyle = rootStyle.getPropertyValue("--bg2").trim() || "#fffaf3";
+    ctx.fillRect(0,0,width,height);
+    ctx.drawImage(img,0,0,width,height);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(pngBlob => {
+      if (!pngBlob) return;
+      const pngUrl = URL.createObjectURL(pngBlob);
+      const a = document.createElement("a");
+      a.href = pngUrl; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(pngUrl), 1000);
+    }, "image/png");
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); alert("Could not render PNG in this browser. Try downloading the CSV or taking a screenshot."); };
+  img.src = url;
+}
+function contributionPayload(){
+  const first_name = document.getElementById("contribFirstName")?.value.trim() || "";
+  const last_name = document.getElementById("contribLastName")?.value.trim() || "";
+  return {
+    submitted_from:"networked-resilience.eu static contribution form",
+    date:new Date().toISOString(),
+    first_name,
+    last_name,
+    affiliation:document.getElementById("contribAffiliation")?.value.trim() || "",
+    email:document.getElementById("contribEmail")?.value.trim() || "",
+    person_type:document.getElementById("contribPersonType")?.value || "",
+    proposal_type:document.getElementById("contribType")?.value || "",
+    concept_name:document.getElementById("contribConcept")?.value.trim() || "",
+    source_title:document.getElementById("contribSource")?.value.trim() || "",
+    proposed_change:document.getElementById("contribMessage")?.value.trim() || ""
+  };
+}
+function contributionEmailParts(){
+  const p = contributionPayload();
+  const body = [
+    "Networked Resilience contribution proposal", "",
+    `First name: ${p.first_name}`,
+    `Last name: ${p.last_name}`,
+    `Affiliation: ${p.affiliation}`,
+    `Email: ${p.email}`,
+    `Type of person: ${p.person_type}`,
+    `Proposal type: ${p.proposal_type}`,
+    `Concept name: ${p.concept_name}`,
+    `Source title: ${p.source_title}`, "",
+    "Proposed change:", p.proposed_change
+  ].join("\n");
+  return {
+    to: CONTACT_EMAIL,
+    subject: `[Networked Resilience] Contribution proposal: ${p.proposal_type || "General proposal"}`,
+    body
+  };
+}
+function openGmailContributionDraft(){
+  const e = contributionEmailParts();
+  const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(e.to)}&su=${encodeURIComponent(e.subject)}&body=${encodeURIComponent(e.body)}`;
+  window.open(url, "_blank", "noopener");
+}
+function openDefaultEmailContributionDraft(){
+  const e = contributionEmailParts();
+  window.location.href = `mailto:${e.to}?subject=${encodeURIComponent(e.subject)}&body=${encodeURIComponent(e.body)}`;
+}
+function openGmailCommunityDraft(){
+  const subject = "[Networked Resilience] Join community of practice";
+  const body = [
+    "Dear Networked Resilience team,", "",
+    "I would like to join the community of practice on networked democratic resilience.", "",
+    "First name:",
+    "Last name:",
+    "Affiliation:",
+    "Email:",
+    "Role / sector:",
+    "Areas of interest:", "",
+    "Kind regards,"
+  ].join("\n");
+  const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.open(url, "_blank", "noopener");
+}
+function wireDownloadsAndForm(){
+  document.querySelectorAll(".joinCommunityPractice").forEach(btn => btn.addEventListener("click", openGmailCommunityDraft));
+  document.getElementById("downloadNetworkPng")?.addEventListener("click", () => { drawNetwork(); downloadSvgAsPng("netSvg", `networked-resilience_${PLATFORM_VERSION}_network-graph.png`); });
+  document.getElementById("downloadNetworkNodesCsv")?.addEventListener("click", () => {
+    downloadText(`networked-resilience_${PLATFORM_VERSION}_network_nodes.csv`, toCsv(networkNodeRows(), ["id","label","parent","branch","branch_label","depth","source_ids","source_count","description"]), "text/csv;charset=utf-8");
+  });
+  document.getElementById("downloadNetworkLinksCsv")?.addEventListener("click", () => {
+    downloadText(`networked-resilience_${PLATFORM_VERSION}_network_ties.csv`, toCsv(networkLinkRows(), ["source","target","relation","relation_group","is_hierarchy"]), "text/csv;charset=utf-8");
+  });
+  document.getElementById("downloadRadialPng")?.addEventListener("click", () => { drawSunburst(); downloadSvgAsPng("sunSvg", `networked-resilience_${PLATFORM_VERSION}_radial-map.png`); });
+  document.getElementById("downloadRadialCsv")?.addEventListener("click", () => {
+    downloadText(`networked-resilience_${PLATFORM_VERSION}_radial_map.csv`, toCsv(radialRows(), ["id","label","parent","branch","branch_label","depth","path","source_ids","source_count","description"]), "text/csv;charset=utf-8");
+  });
+  document.getElementById("downloadProposalJson")?.addEventListener("click", () => {
+    const form = document.getElementById("contributionForm");
+    if (form && !form.reportValidity()) return;
+    downloadText(`networked-resilience_${PLATFORM_VERSION}_contribution-proposal.json`, JSON.stringify(contributionPayload(), null, 2), "application/json;charset=utf-8");
+  });
+  document.getElementById("sendProposalDefaultEmail")?.addEventListener("click", () => {
+    const form = document.getElementById("contributionForm");
+    if (form && !form.reportValidity()) return;
+    openDefaultEmailContributionDraft();
+  });
+  document.getElementById("contributionForm")?.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    if (!ev.currentTarget.reportValidity()) return;
+    openGmailContributionDraft();
+  });
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+wireDownloadsAndForm();
+renderTree();
+selectNode("root", { switchToExplorer:false });
+switchView("viewHome");
+// Re-run layout on resize for current view
+let _rt;
+window.addEventListener("resize", () => {
+  syncTopbarOffset();
+  clearTimeout(_rt);
+  _rt = setTimeout(() => {
+    const netSvg = document.getElementById("netSvg");
+    const sunSvg = document.getElementById("sunSvg");
+    if (netDrawn && netSvg){ netDrawn = false; netSvg.innerHTML=""; if (document.getElementById("viewNetwork").classList.contains("active")) drawNetwork(); }
+    if (sunDrawn && sunSvg){ sunDrawn = false; sunSvg.innerHTML=""; if (document.getElementById("viewRadial").classList.contains("active")) drawSunburst(); }
+  }, 250);
+});
+if ("ResizeObserver" in window){
+  const topbar = document.querySelector("header.topbar");
+  if (topbar) new ResizeObserver(syncTopbarOffset).observe(topbar);
+}
+</script>
+</body>
+</html>
